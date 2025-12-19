@@ -8,6 +8,8 @@ import type {
   R2Binding,
   DurableObjectBinding,
   ServiceBinding,
+  HyperdriveBinding,
+  AIBinding,
 } from '../types/bindings.js';
 
 /**
@@ -125,5 +127,43 @@ export function serviceBinding(
     binding,
     service,
     ...(environment && { environment }),
+  };
+}
+
+/**
+ * Create a Hyperdrive database connection binding
+ * 
+ * @param binding - Binding name (JavaScript identifier)
+ * @param id - Hyperdrive configuration ID
+ * @returns HyperdriveBinding object
+ * 
+ * @example
+ * ```ts
+ * const db = hyperdriveBinding('DATABASE', 'hyperdrive-config-id');
+ * ```
+ */
+export function hyperdriveBinding(binding: string, id: string): HyperdriveBinding {
+  return {
+    type: 'hyperdrive',
+    binding,
+    id,
+  };
+}
+
+/**
+ * Create a Workers AI binding
+ * 
+ * @param binding - Binding name (JavaScript identifier), defaults to 'AI'
+ * @returns AIBinding object
+ * 
+ * @example
+ * ```ts
+ * const ai = aiBinding('AI');
+ * ```
+ */
+export function aiBinding(binding: string = 'AI'): AIBinding {
+  return {
+    type: 'ai',
+    binding,
   };
 }

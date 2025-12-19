@@ -13,7 +13,8 @@ export type BindingType =
   | 'service'
   | 'analytics_engine'
   | 'queue'
-  | 'hyperdrive';
+  | 'hyperdrive'
+  | 'ai';
 
 /**
  * D1 Database binding
@@ -82,12 +83,20 @@ export interface QueueBinding {
 }
 
 /**
- * Hyperdrive binding
+ * Hyperdrive binding for database connections
  */
 export interface HyperdriveBinding {
   type: 'hyperdrive';
   binding: string;
   id: string;
+}
+
+/**
+ * AI binding for Workers AI
+ */
+export interface AIBinding {
+  type: 'ai';
+  binding: string;
 }
 
 /**
@@ -101,4 +110,5 @@ export type Binding =
   | ServiceBinding
   | AnalyticsEngineBinding
   | QueueBinding
-  | HyperdriveBinding;
+  | HyperdriveBinding
+  | AIBinding;

@@ -90,6 +90,14 @@ export const HyperdriveBindingSchema = z.object({
 });
 
 /**
+ * AI Binding schema
+ */
+export const AIBindingSchema = z.object({
+  type: z.literal('ai'),
+  binding: z.string().min(1).regex(identifierRegex, 'Binding must be a valid JavaScript identifier'),
+});
+
+/**
  * Discriminated union of all binding types
  */
 export const BindingSchema = z.discriminatedUnion('type', [
@@ -101,6 +109,7 @@ export const BindingSchema = z.discriminatedUnion('type', [
   AnalyticsEngineBindingSchema,
   QueueBindingSchema,
   HyperdriveBindingSchema,
+  AIBindingSchema,
 ]);
 
 /**

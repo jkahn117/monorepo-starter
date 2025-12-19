@@ -90,6 +90,10 @@ function bindingToTOML(binding: Binding): Record<string, unknown> {
         binding: binding.binding,
         id: binding.id,
       };
+    case 'ai':
+      return {
+        binding: binding.binding,
+      };
   }
 }
 
@@ -130,6 +134,7 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
     const aeBindings = config.bindings.filter((b) => b.type === 'analytics_engine');
     const queueBindings = config.bindings.filter((b) => b.type === 'queue');
     const hyperdriveBindings = config.bindings.filter((b) => b.type === 'hyperdrive');
+    const aiBindings = config.bindings.filter((b) => b.type === 'ai');
 
     if (d1Bindings.length > 0) {
       obj['d1_databases'] = d1Bindings.map(bindingToTOML);
@@ -161,6 +166,10 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
 
     if (hyperdriveBindings.length > 0) {
       obj['hyperdrive'] = hyperdriveBindings.map(bindingToTOML);
+    }
+
+    if (aiBindings.length > 0) {
+      obj['ai'] = aiBindings.map(bindingToTOML);
     }
   }
 

@@ -127,9 +127,6 @@ This template includes a Turborepo generator for creating new Cloudflare Workers
 ```bash
 # Interactive generator
 pnpm gen cloudflare-worker
-
-# Or specify the name directly
-pnpm gen cloudflare-worker --name my-api-worker
 ```
 
 **You'll be prompted for:**
@@ -170,7 +167,7 @@ const app = new Hono<{ Bindings: Env }>();
 
 // Add your routes
 app.get('/', (c) => {
-  return c.json({ 
+  return c.json({
     message: 'Welcome to my API',
     version: '1.0.0'
   });
@@ -186,11 +183,11 @@ app.get('/users', async (c) => {
 app.post('/users', async (c) => {
   const body = await c.req.json();
   const db = c.env.DB;
-  
+
   await db.prepare('INSERT INTO users (name, email) VALUES (?, ?)')
     .bind(body.name, body.email)
     .run();
-    
+
   return c.json({ success: true });
 });
 
@@ -211,7 +208,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Insert sample data
-INSERT INTO users (name, email) VALUES 
+INSERT INTO users (name, email) VALUES
   ('Alice', 'alice@example.com'),
   ('Bob', 'bob@example.com');
 ```
@@ -228,12 +225,12 @@ export default defineConfig({
   main: 'src/index.ts',
   compatibility_date: '2024-01-01',
   compatibility_flags: ['nodejs_compat'],
-  
+
   bindings: [
     d1Binding('DB', 'my-database', 'dev-db-id'),
     kvBinding('CACHE', 'dev-cache-id'),
   ],
-  
+
   env: {
     production: defineEnvironment('production', {
       name: 'my-api-worker-prod',
@@ -295,14 +292,14 @@ export default defineConfig({
   name: 'full-stack-worker',
   main: 'src/index.ts',
   compatibility_date: '2024-01-01',
-  
+
   bindings: [
     // D1 Database
     d1Binding('DB', 'my-database', 'db-id-here'),
-    
+
     // KV Cache
     kvBinding('CACHE', 'kv-namespace-id'),
-    
+
     // R2 Storage
     r2Binding('STORAGE', 'my-bucket'),
   ],
@@ -318,14 +315,14 @@ export default defineConfig({
   name: 'my-worker',
   main: 'src/index.ts',
   compatibility_date: '2024-01-01',
-  
+
   // Development defaults
   bindings: [d1Binding('DB', 'my-db', 'local-db')],
   vars: {
     LOG_LEVEL: 'debug',
     API_URL: 'http://localhost:3000',
   },
-  
+
   // Environment overrides
   env: {
     staging: defineEnvironment('staging', {
@@ -336,7 +333,7 @@ export default defineConfig({
         API_URL: 'https://staging-api.example.com',
       },
     }),
-    
+
     production: defineEnvironment('production', {
       name: 'my-worker-prod',
       bindings: [d1Binding('DB', 'my-db', 'prod-db-id')],
@@ -359,14 +356,14 @@ export default defineConfig({
   name: 'my-worker',
   main: 'src/index.ts',
   compatibility_date: '2024-01-01',
-  
+
   // Use preset bindings
   bindings: [
     commonBindings.cacheKV('CACHE', 'my-kv-id'),
     commonBindings.storageBucket('STORAGE', 'my-bucket'),
     commonBindings.productionD1('DB', 'my-db', 'db-id'),
   ],
-  
+
   // Use preset environments
   env: environments,
 });
@@ -528,9 +525,9 @@ export default defineNuxtConfig({
       apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8787',
     },
   },
-  
+
   devtools: { enabled: true },
-  
+
   modules: ['@nuxt/eslint'],
 });
 ```
@@ -543,16 +540,16 @@ Create `apps/my-frontend/pages/index.vue`:
 <template>
   <div class="container">
     <h1>Users</h1>
-    
+
     <div v-if="pending">Loading...</div>
     <div v-else-if="error">Error: {{ error.message }}</div>
-    
+
     <ul v-else>
       <li v-for="user in users" :key="user.id">
         {{ user.name }} ({{ user.email }})
       </li>
     </ul>
-    
+
     <form @submit.prevent="handleSubmit">
       <input v-model="newUser.name" placeholder="Name" required />
       <input v-model="newUser.email" placeholder="Email" type="email" required />
@@ -792,12 +789,12 @@ export default defineConfig({
   main: 'src/index.ts',
   compatibility_date: '2024-01-01',
   compatibility_flags: ['nodejs_compat'],
-  
+
   bindings: [
     d1Binding('DB', 'my-database-dev', 'your-dev-db-id-here'),
     kvBinding('CACHE', 'your-dev-kv-id-here'),
   ],
-  
+
   env: {
     production: defineEnvironment('production', {
       name: 'my-api-worker-prod',
@@ -887,13 +884,13 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build
         run: pnpm turbo build
-      
+
       - name: Deploy Workers
         run: pnpm turbo deploy
         env:

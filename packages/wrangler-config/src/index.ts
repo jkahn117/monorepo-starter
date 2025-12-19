@@ -19,6 +19,8 @@ export {
   r2Binding,
   durableObjectBinding,
   serviceBinding,
+  hyperdriveBinding,
+  aiBinding,
 } from './builders/bindings.js';
 
 export { defineConfig, ConfigValidationError } from './builders/worker.js';

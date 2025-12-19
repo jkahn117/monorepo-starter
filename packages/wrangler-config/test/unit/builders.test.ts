@@ -9,6 +9,8 @@ import {
   r2Binding,
   durableObjectBinding,
   serviceBinding,
+  hyperdriveBinding,
+  aiBinding,
 } from '../../src/builders/bindings.js';
 
 describe('d1Binding()', () => {
@@ -127,5 +129,49 @@ describe('serviceBinding()', () => {
     const binding = serviceBinding('SVC', 'my-service', undefined);
 
     expect(binding).not.toHaveProperty('environment');
+  });
+});
+
+describe('hyperdriveBinding()', () => {
+  it('creates a valid Hyperdrive binding', () => {
+    const binding = hyperdriveBinding('DATABASE', 'hyperdrive-config-id');
+
+    expect(binding).toEqual({
+      type: 'hyperdrive',
+      binding: 'DATABASE',
+      id: 'hyperdrive-config-id',
+    });
+  });
+
+  it('accepts any configuration ID format', () => {
+    const binding = hyperdriveBinding('DB', 'cfg-123-456');
+
+    expect(binding.id).toBe('cfg-123-456');
+  });
+});
+
+describe('aiBinding()', () => {
+  it('creates a valid AI binding with default name', () => {
+    const binding = aiBinding();
+
+    expect(binding).toEqual({
+      type: 'ai',
+      binding: 'AI',
+    });
+  });
+
+  it('creates a valid AI binding with custom name', () => {
+    const binding = aiBinding('MY_AI');
+
+    expect(binding).toEqual({
+      type: 'ai',
+      binding: 'MY_AI',
+    });
+  });
+
+  it('accepts binding names with underscores', () => {
+    const binding = aiBinding('WORKERS_AI');
+
+    expect(binding.binding).toBe('WORKERS_AI');
   });
 });

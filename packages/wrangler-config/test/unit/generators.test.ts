@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateTOML } from '../../src/generators/toml.js';
 import { defineConfig } from '../../src/builders/worker.js';
-import { d1Binding, kvBinding, r2Binding } from '../../src/builders/bindings.js';
+import { d1Binding, kvBinding, r2Binding, hyperdriveBinding, aiBinding } from '../../src/builders/bindings.js';
 
 describe('generateTOML()', () => {
   describe('basic config', () => {
@@ -112,6 +112,35 @@ describe('generateTOML()', () => {
       expect(toml).toContain("bucket_name = 'my-bucket'");
     });
 
+    it('generates Hyperdrive bindings', () => {
+      const config = defineConfig({
+        name: 'my-worker',
+        main: 'src/index.ts',
+        compatibility_date: '2024-01-01',
+        bindings: [hyperdriveBinding('DATABASE', 'hyperdrive-config-id')],
+      });
+
+      const toml = generateTOML(config);
+
+      expect(toml).toContain('hyperdrive');
+      expect(toml).toContain("binding = 'DATABASE'");
+      expect(toml).toContain("id = 'hyperdrive-config-id'");
+    });
+
+    it('generates AI bindings', () => {
+      const config = defineConfig({
+        name: 'my-worker',
+        main: 'src/index.ts',
+        compatibility_date: '2024-01-01',
+        bindings: [aiBinding('AI')],
+      });
+
+      const toml = generateTOML(config);
+
+      expect(toml).toContain('ai');
+      expect(toml).toContain("binding = 'AI'");
+    });
+
     it('generates multiple bindings', () => {
       const config = defineConfig({
         name: 'my-worker',
@@ -121,6 +150,8 @@ describe('generateTOML()', () => {
           d1Binding('DB', 'database', 'db-id'),
           kvBinding('CACHE', 'kv-id'),
           r2Binding('STORAGE', 'bucket'),
+          hyperdriveBinding('DATABASE', 'hd-config'),
+          aiBinding('AI'),
         ],
       });
 
@@ -129,6 +160,8 @@ describe('generateTOML()', () => {
       expect(toml).toContain('d1_databases');
       expect(toml).toContain('kv_namespaces');
       expect(toml).toContain('r2_buckets');
+      expect(toml).toContain('hyperdrive');
+      expect(toml).toContain('ai');
     });
   });
 

@@ -2,7 +2,7 @@
 
 > Shared Cloudflare Workers configuration management for TypeScript monorepos
 
-[![Tests](https://img.shields.io/badge/tests-67%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-66%20passing-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)]()
 
 ## Overview
@@ -127,6 +127,8 @@ import {
   r2Binding,
   durableObjectBinding,
   serviceBinding,
+  hyperdriveBinding,
+  aiBinding,
 } from '@repo/wrangler-config';
 
 // D1 Database
@@ -143,6 +145,57 @@ durableObjectBinding('COUNTER', 'CounterClass', 'counter-worker');
 
 // Service Binding (for RPC)
 serviceBinding('AUTH', 'auth-service', 'production');
+
+// Hyperdrive (database connections)
+hyperdriveBinding('DATABASE', 'hyperdrive-config-id');
+
+// Workers AI
+aiBinding('AI'); // or aiBinding() for default 'AI' binding name
+```
+
+### Supported Bindings
+
+All Cloudflare Workers bindings are supported:
+
+| Binding Type | Builder Function | Description | Example |
+|--------------|------------------|-------------|---------|
+| D1 Database | `d1Binding(binding, dbName, dbId)` | SQLite database | `d1Binding('DB', 'my-db', 'uuid')` |
+| KV Namespace | `kvBinding(binding, id)` | Key-value storage | `kvBinding('CACHE', 'kv-id')` |
+| R2 Bucket | `r2Binding(binding, bucketName)` | Object storage | `r2Binding('STORAGE', 'bucket')` |
+| Durable Object | `durableObjectBinding(binding, className, script?)` | Stateful objects | `durableObjectBinding('COUNTER', 'Counter')` |
+| Service Binding | `serviceBinding(binding, service, env?)` | Inter-worker RPC | `serviceBinding('AUTH', 'auth-svc')` |
+| Hyperdrive | `hyperdriveBinding(binding, id)` | Database connections | `hyperdriveBinding('DB', 'config-id')` |
+| Workers AI | `aiBinding(binding?)` | AI model inference | `aiBinding('AI')` or `aiBinding()` |
+
+**Example with multiple bindings:**
+
+```typescript
+import {
+  defineConfig,
+  d1Binding,
+  kvBinding,
+  hyperdriveBinding,
+  aiBinding,
+} from '@repo/wrangler-config';
+
+export default defineConfig({
+  name: 'ai-powered-api',
+  main: 'src/index.ts',
+  compatibility_date: '2024-01-01',
+  bindings: [
+    // PostgreSQL via Hyperdrive
+    hyperdriveBinding('DATABASE', 'hyperdrive-postgres-config'),
+    
+    // D1 for SQLite data
+    d1Binding('ANALYTICS', 'analytics-db', 'analytics-db-id'),
+    
+    // KV for caching
+    kvBinding('CACHE', 'cache-namespace-id'),
+    
+    // Workers AI for ML inference
+    aiBinding('AI'),
+  ],
+});
 ```
 
 ### Environment Configuration
