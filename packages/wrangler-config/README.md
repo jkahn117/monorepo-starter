@@ -2,7 +2,7 @@
 
 > Shared Cloudflare Workers configuration management for TypeScript monorepos
 
-[![Tests](https://img.shields.io/badge/tests-66%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-70%20passing-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)]()
 
 ## Overview
@@ -129,6 +129,7 @@ import {
   serviceBinding,
   hyperdriveBinding,
   aiBinding,
+  workflowsBinding,
 } from '@repo/wrangler-config';
 
 // D1 Database
@@ -151,6 +152,9 @@ hyperdriveBinding('DATABASE', 'hyperdrive-config-id');
 
 // Workers AI
 aiBinding('AI'); // or aiBinding() for default 'AI' binding name
+
+// Workflows
+workflowsBinding('MY_WORKFLOW', 'MyWorkflow', 'workflow-worker');
 ```
 
 ### Supported Bindings
@@ -166,6 +170,7 @@ All Cloudflare Workers bindings are supported:
 | Service Binding | `serviceBinding(binding, service, env?)` | Inter-worker RPC | `serviceBinding('AUTH', 'auth-svc')` |
 | Hyperdrive | `hyperdriveBinding(binding, id)` | Database connections | `hyperdriveBinding('DB', 'config-id')` |
 | Workers AI | `aiBinding(binding?)` | AI model inference | `aiBinding('AI')` or `aiBinding()` |
+| Workflows | `workflowsBinding(binding, className, script?)` | Durable workflows | `workflowsBinding('WORKFLOW', 'MyWorkflow')` |
 
 **Example with multiple bindings:**
 
@@ -176,6 +181,7 @@ import {
   kvBinding,
   hyperdriveBinding,
   aiBinding,
+  workflowsBinding,
 } from '@repo/wrangler-config';
 
 export default defineConfig({
@@ -194,6 +200,9 @@ export default defineConfig({
     
     // Workers AI for ML inference
     aiBinding('AI'),
+    
+    // Workflows for orchestration
+    workflowsBinding('MY_WORKFLOW', 'EmailWorkflow', 'email-worker'),
   ],
 });
 ```

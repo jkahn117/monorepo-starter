@@ -11,6 +11,7 @@ import {
   serviceBinding,
   hyperdriveBinding,
   aiBinding,
+  workflowsBinding,
 } from '../../src/builders/bindings.js';
 
 describe('d1Binding()', () => {
@@ -173,5 +174,34 @@ describe('aiBinding()', () => {
     const binding = aiBinding('WORKERS_AI');
 
     expect(binding.binding).toBe('WORKERS_AI');
+  });
+});
+
+describe('workflowsBinding()', () => {
+  it('creates a valid Workflows binding without script_name', () => {
+    const binding = workflowsBinding('MY_WORKFLOW', 'MyWorkflow');
+
+    expect(binding).toEqual({
+      type: 'workflows',
+      binding: 'MY_WORKFLOW',
+      class_name: 'MyWorkflow',
+    });
+  });
+
+  it('creates a valid Workflows binding with script_name', () => {
+    const binding = workflowsBinding('MY_WORKFLOW', 'MyWorkflow', 'workflow-worker');
+
+    expect(binding).toEqual({
+      type: 'workflows',
+      binding: 'MY_WORKFLOW',
+      class_name: 'MyWorkflow',
+      script_name: 'workflow-worker',
+    });
+  });
+
+  it('omits script_name when undefined', () => {
+    const binding = workflowsBinding('WORKFLOW', 'MyWorkflow', undefined);
+
+    expect(binding).not.toHaveProperty('script_name');
   });
 });

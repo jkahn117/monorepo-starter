@@ -10,6 +10,7 @@ import type {
   ServiceBinding,
   HyperdriveBinding,
   AIBinding,
+  WorkflowsBinding,
 } from '../types/bindings.js';
 
 /**
@@ -165,5 +166,31 @@ export function aiBinding(binding: string = 'AI'): AIBinding {
   return {
     type: 'ai',
     binding,
+  };
+}
+
+/**
+ * Create a Workflows binding
+ * 
+ * @param binding - Binding name (JavaScript identifier)
+ * @param class_name - Workflow class name
+ * @param script_name - (Optional) Script containing the workflow
+ * @returns WorkflowsBinding object
+ * 
+ * @example
+ * ```ts
+ * const workflow = workflowsBinding('MY_WORKFLOW', 'MyWorkflow', 'workflow-worker');
+ * ```
+ */
+export function workflowsBinding(
+  binding: string,
+  class_name: string,
+  script_name?: string,
+): WorkflowsBinding {
+  return {
+    type: 'workflows',
+    binding,
+    class_name,
+    ...(script_name && { script_name }),
   };
 }

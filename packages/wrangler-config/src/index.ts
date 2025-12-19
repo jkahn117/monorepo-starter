@@ -21,6 +21,7 @@ export {
   serviceBinding,
   hyperdriveBinding,
   aiBinding,
+  workflowsBinding,
 } from './builders/bindings.js';
 
 export { defineConfig, ConfigValidationError } from './builders/worker.js';

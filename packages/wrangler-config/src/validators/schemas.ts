@@ -98,6 +98,16 @@ export const AIBindingSchema = z.object({
 });
 
 /**
+ * Workflows Binding schema
+ */
+export const WorkflowsBindingSchema = z.object({
+  type: z.literal('workflows'),
+  binding: z.string().min(1).regex(identifierRegex, 'Binding must be a valid JavaScript identifier'),
+  class_name: z.string().min(1),
+  script_name: z.string().optional(),
+});
+
+/**
  * Discriminated union of all binding types
  */
 export const BindingSchema = z.discriminatedUnion('type', [
@@ -110,6 +120,7 @@ export const BindingSchema = z.discriminatedUnion('type', [
   QueueBindingSchema,
   HyperdriveBindingSchema,
   AIBindingSchema,
+  WorkflowsBindingSchema,
 ]);
 
 /**

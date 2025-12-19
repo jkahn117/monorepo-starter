@@ -94,6 +94,12 @@ function bindingToTOML(binding: Binding): Record<string, unknown> {
       return {
         binding: binding.binding,
       };
+    case 'workflows':
+      return {
+        binding: binding.binding,
+        class_name: binding.class_name,
+        ...(binding.script_name && { script_name: binding.script_name }),
+      };
   }
 }
 
@@ -135,6 +141,7 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
     const queueBindings = config.bindings.filter((b) => b.type === 'queue');
     const hyperdriveBindings = config.bindings.filter((b) => b.type === 'hyperdrive');
     const aiBindings = config.bindings.filter((b) => b.type === 'ai');
+    const workflowsBindings = config.bindings.filter((b) => b.type === 'workflows');
 
     if (d1Bindings.length > 0) {
       obj['d1_databases'] = d1Bindings.map(bindingToTOML);
@@ -170,6 +177,10 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
 
     if (aiBindings.length > 0) {
       obj['ai'] = aiBindings.map(bindingToTOML);
+    }
+
+    if (workflowsBindings.length > 0) {
+      obj['workflows'] = workflowsBindings.map(bindingToTOML);
     }
   }
 

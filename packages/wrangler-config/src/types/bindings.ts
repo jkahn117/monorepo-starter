@@ -14,7 +14,8 @@ export type BindingType =
   | 'analytics_engine'
   | 'queue'
   | 'hyperdrive'
-  | 'ai';
+  | 'ai'
+  | 'workflows';
 
 /**
  * D1 Database binding
@@ -100,6 +101,16 @@ export interface AIBinding {
 }
 
 /**
+ * Workflows binding for Cloudflare Workflows
+ */
+export interface WorkflowsBinding {
+  type: 'workflows';
+  binding: string;
+  class_name: string;
+  script_name?: string;
+}
+
+/**
  * Discriminated union of all binding types
  */
 export type Binding =
@@ -111,4 +122,5 @@ export type Binding =
   | AnalyticsEngineBinding
   | QueueBinding
   | HyperdriveBinding
-  | AIBinding;
+  | AIBinding
+  | WorkflowsBinding;

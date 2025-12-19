@@ -5,7 +5,7 @@
 import { describe, it, expect } from 'vitest';
 import { generateTOML } from '../../src/generators/toml.js';
 import { defineConfig } from '../../src/builders/worker.js';
-import { d1Binding, kvBinding, r2Binding, hyperdriveBinding, aiBinding } from '../../src/builders/bindings.js';
+import { d1Binding, kvBinding, r2Binding, hyperdriveBinding, aiBinding, workflowsBinding } from '../../src/builders/bindings.js';
 
 describe('generateTOML()', () => {
   describe('basic config', () => {
@@ -141,6 +141,22 @@ describe('generateTOML()', () => {
       expect(toml).toContain("binding = 'AI'");
     });
 
+    it('generates Workflows bindings', () => {
+      const config = defineConfig({
+        name: 'my-worker',
+        main: 'src/index.ts',
+        compatibility_date: '2024-01-01',
+        bindings: [workflowsBinding('MY_WORKFLOW', 'MyWorkflow', 'workflow-worker')],
+      });
+
+      const toml = generateTOML(config);
+
+      expect(toml).toContain('workflows');
+      expect(toml).toContain("binding = 'MY_WORKFLOW'");
+      expect(toml).toContain("class_name = 'MyWorkflow'");
+      expect(toml).toContain("script_name = 'workflow-worker'");
+    });
+
     it('generates multiple bindings', () => {
       const config = defineConfig({
         name: 'my-worker',
@@ -152,6 +168,7 @@ describe('generateTOML()', () => {
           r2Binding('STORAGE', 'bucket'),
           hyperdriveBinding('DATABASE', 'hd-config'),
           aiBinding('AI'),
+          workflowsBinding('WORKFLOW', 'MyWorkflow'),
         ],
       });
 
@@ -162,6 +179,7 @@ describe('generateTOML()', () => {
       expect(toml).toContain('r2_buckets');
       expect(toml).toContain('hyperdrive');
       expect(toml).toContain('ai');
+      expect(toml).toContain('workflows');
     });
   });
 
