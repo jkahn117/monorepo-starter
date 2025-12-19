@@ -67,46 +67,46 @@ This document provides a detailed, actionable task breakdown for implementing th
 
 ### Core Types
 
-- [ ] T016 [P] Define BindingType discriminated union (packages/wrangler-config/src/types/bindings.ts)
-- [ ] T017 [P] Define D1Binding, KVBinding, R2Binding, DurableObjectBinding interfaces (packages/wrangler-config/src/types/bindings.ts)
-- [ ] T018 [P] Define ServiceBinding interface (packages/wrangler-config/src/types/bindings.ts)
-- [ ] T019 [P] Define Binding discriminated union type (packages/wrangler-config/src/types/bindings.ts)
-- [ ] T020 [P] Define WranglerConfig interface (packages/wrangler-config/src/types/config.ts)
-- [ ] T021 [P] Define EnvironmentConfig interface (packages/wrangler-config/src/types/environment.ts)
-- [ ] T022 [P] Define AccountConfig interface (packages/wrangler-config/src/types/config.ts)
-- [ ] T023 Export all types from types/index.ts (packages/wrangler-config/src/types/index.ts)
+- [X] T016 [P] Define BindingType discriminated union (packages/wrangler-config/src/types/bindings.ts)
+- [X] T017 [P] Define D1Binding, KVBinding, R2Binding, DurableObjectBinding interfaces (packages/wrangler-config/src/types/bindings.ts)
+- [X] T018 [P] Define ServiceBinding interface (packages/wrangler-config/src/types/bindings.ts)
+- [X] T019 [P] Define Binding discriminated union type (packages/wrangler-config/src/types/bindings.ts)
+- [X] T020 [P] Define WranglerConfig interface (packages/wrangler-config/src/types/config.ts)
+- [X] T021 [P] Define EnvironmentConfig interface (packages/wrangler-config/src/types/environment.ts)
+- [X] T022 [P] Define AccountConfig interface (packages/wrangler-config/src/types/config.ts)
+- [X] T023 Export all types from types/index.ts (packages/wrangler-config/src/types/index.ts)
 
 ### Zod Schemas
 
-- [ ] T024 Create Zod schema for D1Binding (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T025 Create Zod schema for KVBinding (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T026 Create Zod schema for R2Binding (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T027 Create Zod schema for DurableObjectBinding (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T028 Create Zod schema for ServiceBinding (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T029 Create Zod discriminated union schema for all Bindings (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T030 Create Zod schema for WranglerConfig (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T031 Create Zod schema for EnvironmentConfig (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T024 Create Zod schema for D1Binding (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T025 Create Zod schema for KVBinding (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T026 Create Zod schema for R2Binding (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T027 Create Zod schema for DurableObjectBinding (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T028 Create Zod schema for ServiceBinding (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T029 Create Zod discriminated union schema for all Bindings (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T030 Create Zod schema for WranglerConfig (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T031 Create Zod schema for EnvironmentConfig (packages/wrangler-config/src/validators/schemas.ts)
 
 ### Basic Builders
 
-- [ ] T032 Implement d1Binding() builder function (packages/wrangler-config/src/builders/bindings.ts)
-- [ ] T033 Implement kvBinding() builder function (packages/wrangler-config/src/builders/bindings.ts)
-- [ ] T034 Implement r2Binding() builder function (packages/wrangler-config/src/builders/bindings.ts)
-- [ ] T035 Implement durableObjectBinding() builder function (packages/wrangler-config/src/builders/bindings.ts)
-- [ ] T036 Implement serviceBinding() builder function (packages/wrangler-config/src/builders/bindings.ts)
+- [X] T032 Implement d1Binding() builder function (packages/wrangler-config/src/builders/bindings.ts)
+- [X] T033 Implement kvBinding() builder function (packages/wrangler-config/src/builders/bindings.ts)
+- [X] T034 Implement r2Binding() builder function (packages/wrangler-config/src/builders/bindings.ts)
+- [X] T035 Implement durableObjectBinding() builder function (packages/wrangler-config/src/builders/bindings.ts)
+- [X] T036 Implement serviceBinding() builder function (packages/wrangler-config/src/builders/bindings.ts)
 
 ### Unit Tests for Builders
 
-- [ ] T037 Write unit tests for d1Binding() (packages/wrangler-config/test/unit/builders.test.ts)
-- [ ] T038 Write unit tests for kvBinding() (packages/wrangler-config/test/unit/builders.test.ts)
-- [ ] T039 Write unit tests for r2Binding() (packages/wrangler-config/test/unit/builders.test.ts)
-- [ ] T040 Write unit tests for durableObjectBinding() (packages/wrangler-config/test/unit/builders.test.ts)
-- [ ] T041 Write unit tests for serviceBinding() (packages/wrangler-config/test/unit/builders.test.ts)
+- [X] T037 Write unit tests for d1Binding() (packages/wrangler-config/test/unit/builders.test.ts)
+- [X] T038 Write unit tests for kvBinding() (packages/wrangler-config/test/unit/builders.test.ts)
+- [X] T039 Write unit tests for r2Binding() (packages/wrangler-config/test/unit/builders.test.ts)
+- [X] T040 Write unit tests for durableObjectBinding() (packages/wrangler-config/test/unit/builders.test.ts)
+- [X] T041 Write unit tests for serviceBinding() (packages/wrangler-config/test/unit/builders.test.ts)
 
 ### Verification
 
-- [ ] T042 Run `pnpm test` and verify all builder tests pass (target: 100% coverage for builders)
-- [ ] T043 Run `pnpm lint` and ensure no errors
+- [X] T042 Run `pnpm test` and verify all builder tests pass (target: 100% coverage for builders)
+- [X] T043 Run `pnpm lint` and ensure no errors
 
 **Commit checkpoint**: ✅ Core types and builders implemented
 
