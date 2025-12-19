@@ -18,9 +18,10 @@ A production-ready monorepo template for building Cloudflare applications with T
 ✨ **Shared Packages**
 - 📘 `@repo/shared-types` - Reusable TypeScript types
 - 🗄️ `@repo/db` - Database package with Drizzle ORM (PostgreSQL + D1)
+- ⚙️ `@repo/wrangler-config` - Type-safe Cloudflare Worker configuration builder
 - 🎨 `@repo/prettier-config` - Shared Prettier configuration
 - 🔍 `@repo/eslint-config` - Shared ESLint rules
-- ⚙️ `@repo/tsconfig` - Shared TypeScript configurations
+- 📋 `@repo/tsconfig` - Shared TypeScript configurations
 
 ✨ **Testing**
 - ✅ Vitest for fast unit and integration testing
@@ -96,6 +97,7 @@ pnpm type-check
 ├── packages/
 │   ├── db/                 # Database package (Drizzle ORM)
 │   ├── shared-types/       # Shared TypeScript types
+│   ├── wrangler-config/    # Cloudflare Worker configuration builder
 │   ├── eslint-config/      # ESLint configuration
 │   ├── prettier-config/    # Prettier configuration
 │   └── tsconfig/           # TypeScript configurations
@@ -165,7 +167,8 @@ Required variables:
 1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com)
 2. Get your Account ID from Workers & Pages
 3. Create an API token with Workers permissions
-4. Update `wrangler.toml` in each worker with your account ID
+4. Update `wrangler.config.ts` in each worker with your account ID
+5. Run `pnpm config:generate` to generate `wrangler.toml` from the TypeScript config
 
 ## Deployment
 

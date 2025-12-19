@@ -78,12 +78,13 @@ Select the Cloudflare services your worker needs:
 - Perfect for relational data
 - Low latency queries
 
-**Configuration added**:
-```toml
-[[d1_databases]]
-binding = "DB"
-database_name = "your-worker-db"
-database_id = "your-worker-db-dev"
+**Configuration added** (in `wrangler.config.ts`):
+```typescript
+import { d1Binding } from '@repo/wrangler-config';
+
+bindings: [
+  d1Binding('DB', 'your-worker-db', 'your-worker-db-dev'),
+]
 ```
 
 **Setup required**:
@@ -97,11 +98,13 @@ npx wrangler d1 create your-worker-db-prod
 - Perfect for caching
 - Global replication
 
-**Configuration added**:
-```toml
-[[kv_namespaces]]
-binding = "CACHE"
-id = "YOUR_KV_NAMESPACE_ID"
+**Configuration added** (in `wrangler.config.ts`):
+```typescript
+import { kvBinding } from '@repo/wrangler-config';
+
+bindings: [
+  kvBinding('CACHE', 'YOUR_KV_NAMESPACE_ID'),
+]
 ```
 
 **Setup required**:
@@ -115,11 +118,13 @@ npx wrangler kv:namespace create CACHE --env production
 - Perfect for files and media
 - No egress fees
 
-**Configuration added**:
-```toml
-[[r2_buckets]]
-binding = "STORAGE"
-bucket_name = "your-worker-bucket"
+**Configuration added** (in `wrangler.config.ts`):
+```typescript
+import { r2Binding } from '@repo/wrangler-config';
+
+bindings: [
+  r2Binding('STORAGE', 'your-worker-bucket'),
+]
 ```
 
 **Setup required**:
@@ -133,12 +138,13 @@ npx wrangler r2 bucket create your-worker-bucket-prod
 - Perfect for real-time features
 - Strong consistency
 
-**Configuration added**:
-```toml
-[[durable_objects.bindings]]
-name = "MY_DURABLE_OBJECT"
-class_name = "MyDurableObject"
-script_name = "your-worker"
+**Configuration added** (in `wrangler.config.ts`):
+```typescript
+import { durableObjectBinding } from '@repo/wrangler-config';
+
+bindings: [
+  durableObjectBinding('MY_DURABLE_OBJECT', 'MyDurableObject', 'your-worker'),
+]
 ```
 
 ### 4. Database Package
@@ -164,11 +170,14 @@ apps/your-worker/
 │   ├── index.ts          # Main entry (HTTP)
 │   ├── scheduled.ts      # Scheduled handler (optional)
 │   └── types.ts          # Local type definitions
+├── scripts/
+│   └── generate-config.ts # Config generation script
 ├── test/
 │   └── index.test.ts     # Integration tests
 ├── package.json          # Dependencies and scripts
 ├── tsconfig.json         # TypeScript configuration
-├── wrangler.toml         # Cloudflare configuration
+├── wrangler.config.ts    # TypeScript configuration (source)
+├── wrangler.toml         # Generated TOML (auto-created)
 ├── vitest.config.ts      # Test configuration
 ├── .env.example          # Environment template
 └── README.md             # Worker documentation
@@ -197,16 +206,29 @@ Displays next steps for configuration.
 
 ### Step 1: Configure Cloudflare Account
 
-Update `wrangler.toml`:
+Update `wrangler.config.ts`:
 
-```toml
-name = "your-worker"
-main = "src/index.ts"
-compatibility_date = "2024-01-01"
-account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"  # Add this
+```typescript
+import { defineConfig } from '@repo/wrangler-config';
+
+export default defineConfig({
+  name: 'your-worker',
+  main: 'src/index.ts',
+  compatibility_date: '2024-01-01',
+  account_id: 'YOUR_CLOUDFLARE_ACCOUNT_ID', // Add this
+  bindings: [
+    // Your bindings here
+  ],
+});
 ```
 
 Get your account ID from [Cloudflare Dashboard](https://dash.cloudflare.com).
+
+Then generate `wrangler.toml`:
+
+```bash
+pnpm --filter @repo/your-worker config:generate
+```
 
 ### Step 2: Set Up Bindings
 

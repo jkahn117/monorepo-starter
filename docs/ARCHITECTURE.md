@@ -34,9 +34,12 @@ apps/example-worker/
 ├── src/
 │   ├── index.ts            # Worker entry point
 │   └── types.ts            # Local type definitions
+├── scripts/
+│   └── generate-config.ts  # Config generation script
 ├── test/
 │   └── index.test.ts       # Worker tests
-├── wrangler.toml           # Cloudflare configuration
+├── wrangler.config.ts      # TypeScript configuration (source of truth)
+├── wrangler.toml           # Generated Cloudflare configuration
 ├── package.json            # Dependencies and scripts
 └── README.md               # App-specific documentation
 ```
@@ -80,6 +83,44 @@ Database package with Drizzle ORM supporting PostgreSQL and Cloudflare D1.
 ```typescript
 import { createD1Client } from "@repo/db/client";
 import { users } from "@repo/db/schema";
+```
+
+#### `@repo/wrangler-config`
+
+Type-safe configuration builder for Cloudflare Workers, enabling centralized and reusable wrangler configuration.
+
+**Features**:
+- Type-safe binding definitions (D1, KV, R2, Durable Objects, Service Bindings)
+- Environment-specific configuration (development, staging, production)
+- TOML and JSONC generation from TypeScript config
+- Validation with Zod schemas
+- Turborepo integration with `config:generate` task
+
+**Modules**:
+- `builders/` - Configuration builder functions (defineConfig, bindings)
+- `generators/` - TOML/JSONC generators and file writers
+- `types/` - TypeScript type definitions for all configuration options
+- `validators/` - Zod schemas for runtime validation
+- `presets/` - Common configuration presets (bindings, environments)
+
+**Usage**:
+```typescript
+import { defineConfig, d1Binding, kvBinding } from "@repo/wrangler-config";
+
+export default defineConfig({
+  name: 'my-worker',
+  main: 'src/index.ts',
+  compatibility_date: '2024-01-01',
+  bindings: [
+    d1Binding('DB', 'my-database', 'db-id'),
+    kvBinding('CACHE', 'kv-namespace-id'),
+  ],
+});
+```
+
+Then generate `wrangler.toml`:
+```bash
+pnpm config:generate
 ```
 
 #### `@repo/eslint-config`

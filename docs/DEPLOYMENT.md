@@ -62,21 +62,41 @@ export CLOUDFLARE_API_TOKEN=your_token_here
 
 ### 4. Configure Workers
 
-Update `wrangler.toml` in each worker directory:
+This template uses `@repo/wrangler-config` for type-safe configuration. Update `wrangler.config.ts` in each worker directory:
 
-```toml
-name = "example-worker"
-main = "src/index.ts"
-compatibility_date = "2024-01-01"
-node_compat = true
+```typescript
+import { defineConfig, d1Binding } from '@repo/wrangler-config';
 
-# Add your account ID
-account_id = "your_account_id_here"
-
-# Environment-specific settings
-[env.production]
-name = "example-worker-prod"
+export default defineConfig({
+  name: 'example-worker',
+  main: 'src/index.ts',
+  compatibility_date: '2024-01-01',
+  account_id: 'your_account_id_here', // Add your account ID
+  bindings: [
+    d1Binding('DB', 'example-db', 'db-id-dev'),
+  ],
+  environments: {
+    production: {
+      name: 'example-worker-prod',
+      bindings: [
+        d1Binding('DB', 'example-db-prod', 'db-id-prod'),
+      ],
+    },
+  },
+});
 ```
+
+Then generate `wrangler.toml`:
+
+```bash
+pnpm --filter @repo/example-worker config:generate
+```
+
+**Benefits**:
+- Type-safe configuration with autocomplete
+- Centralized binding definitions
+- Environment-specific overrides
+- Validation before generation
 
 ### 5. Set Environment Variables
 
@@ -100,12 +120,17 @@ CLOUDFLARE_API_TOKEN=your_api_token  # If using API token
 Deploy to the default environment (development):
 
 ```bash
+# Generate configuration files (if not already generated)
+pnpm --filter @repo/example-worker config:generate
+
 # Deploy all workers
 pnpm deploy
 
 # Deploy specific worker
 pnpm --filter @repo/example-worker deploy
 ```
+
+**Note**: The `config:generate` task runs automatically before `dev`, `build`, and `deploy` tasks via Turborepo dependencies.
 
 ### Deploy to Production
 
