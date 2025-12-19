@@ -149,6 +149,23 @@ describe('hyperdriveBinding()', () => {
 
     expect(binding.id).toBe('cfg-123-456');
   });
+
+  it('creates a valid Hyperdrive binding with localConnectionString', () => {
+    const binding = hyperdriveBinding('DATABASE', 'hyperdrive-config-id', 'postgresql://localhost:5432/mydb');
+
+    expect(binding).toEqual({
+      type: 'hyperdrive',
+      binding: 'DATABASE',
+      id: 'hyperdrive-config-id',
+      localConnectionString: 'postgresql://localhost:5432/mydb',
+    });
+  });
+
+  it('omits localConnectionString when undefined', () => {
+    const binding = hyperdriveBinding('DATABASE', 'config-id', undefined);
+
+    expect(binding).not.toHaveProperty('localConnectionString');
+  });
 });
 
 describe('aiBinding()', () => {

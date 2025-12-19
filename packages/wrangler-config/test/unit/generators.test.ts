@@ -127,6 +127,22 @@ describe('generateTOML()', () => {
       expect(toml).toContain("id = 'hyperdrive-config-id'");
     });
 
+    it('generates Hyperdrive bindings with localConnectionString', () => {
+      const config = defineConfig({
+        name: 'my-worker',
+        main: 'src/index.ts',
+        compatibility_date: '2024-01-01',
+        bindings: [hyperdriveBinding('DATABASE', 'hyperdrive-config-id', 'postgresql://localhost:5432/mydb')],
+      });
+
+      const toml = generateTOML(config);
+
+      expect(toml).toContain('hyperdrive');
+      expect(toml).toContain("binding = 'DATABASE'");
+      expect(toml).toContain("id = 'hyperdrive-config-id'");
+      expect(toml).toContain("localConnectionString = 'postgresql://localhost:5432/mydb'");
+    });
+
     it('generates AI bindings', () => {
       const config = defineConfig({
         name: 'my-worker',

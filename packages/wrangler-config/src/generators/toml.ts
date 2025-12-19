@@ -89,6 +89,7 @@ function bindingToTOML(binding: Binding): Record<string, unknown> {
       return {
         binding: binding.binding,
         id: binding.id,
+        ...(binding.localConnectionString && { localConnectionString: binding.localConnectionString }),
       };
     case 'ai':
       return {

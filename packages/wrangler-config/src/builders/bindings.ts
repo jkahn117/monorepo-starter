@@ -136,18 +136,26 @@ export function serviceBinding(
  * 
  * @param binding - Binding name (JavaScript identifier)
  * @param id - Hyperdrive configuration ID
+ * @param localConnectionString - (Optional) Local connection string for development
  * @returns HyperdriveBinding object
  * 
  * @example
  * ```ts
  * const db = hyperdriveBinding('DATABASE', 'hyperdrive-config-id');
+ * // With local connection string for development
+ * const dbLocal = hyperdriveBinding('DATABASE', 'hyperdrive-config-id', 'postgresql://localhost:5432/mydb');
  * ```
  */
-export function hyperdriveBinding(binding: string, id: string): HyperdriveBinding {
+export function hyperdriveBinding(
+  binding: string,
+  id: string,
+  localConnectionString?: string,
+): HyperdriveBinding {
   return {
     type: 'hyperdrive',
     binding,
     id,
+    ...(localConnectionString && { localConnectionString }),
   };
 }
 

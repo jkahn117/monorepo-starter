@@ -90,6 +90,7 @@ export interface HyperdriveBinding {
   type: 'hyperdrive';
   binding: string;
   id: string;
+  localConnectionString?: string;
 }
 
 /**

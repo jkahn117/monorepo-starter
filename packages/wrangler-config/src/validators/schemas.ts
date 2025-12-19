@@ -87,6 +87,7 @@ export const HyperdriveBindingSchema = z.object({
   type: z.literal('hyperdrive'),
   binding: z.string().min(1).regex(identifierRegex, 'Binding must be a valid JavaScript identifier'),
   id: z.string().min(1),
+  localConnectionString: z.string().optional(),
 });
 
 /**

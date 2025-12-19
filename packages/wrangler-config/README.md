@@ -2,7 +2,7 @@
 
 > Shared Cloudflare Workers configuration management for TypeScript monorepos
 
-[![Tests](https://img.shields.io/badge/tests-70%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-73%20passing-brightgreen)]()
 [![Coverage](https://img.shields.io/badge/coverage-%3E90%25-brightgreen)]()
 
 ## Overview
@@ -150,6 +150,9 @@ serviceBinding('AUTH', 'auth-service', 'production');
 // Hyperdrive (database connections)
 hyperdriveBinding('DATABASE', 'hyperdrive-config-id');
 
+// Hyperdrive with local connection string for development
+hyperdriveBinding('DATABASE', 'hyperdrive-config-id', 'postgresql://localhost:5432/mydb');
+
 // Workers AI
 aiBinding('AI'); // or aiBinding() for default 'AI' binding name
 
@@ -168,7 +171,7 @@ All Cloudflare Workers bindings are supported:
 | R2 Bucket | `r2Binding(binding, bucketName)` | Object storage | `r2Binding('STORAGE', 'bucket')` |
 | Durable Object | `durableObjectBinding(binding, className, script?)` | Stateful objects | `durableObjectBinding('COUNTER', 'Counter')` |
 | Service Binding | `serviceBinding(binding, service, env?)` | Inter-worker RPC | `serviceBinding('AUTH', 'auth-svc')` |
-| Hyperdrive | `hyperdriveBinding(binding, id)` | Database connections | `hyperdriveBinding('DB', 'config-id')` |
+| Hyperdrive | `hyperdriveBinding(binding, id, localConnectionString?)` | Database connections | `hyperdriveBinding('DB', 'config-id')` |
 | Workers AI | `aiBinding(binding?)` | AI model inference | `aiBinding('AI')` or `aiBinding()` |
 | Workflows | `workflowsBinding(binding, className, script?)` | Durable workflows | `workflowsBinding('WORKFLOW', 'MyWorkflow')` |
 
@@ -189,8 +192,8 @@ export default defineConfig({
   main: 'src/index.ts',
   compatibility_date: '2024-01-01',
   bindings: [
-    // PostgreSQL via Hyperdrive
-    hyperdriveBinding('DATABASE', 'hyperdrive-postgres-config'),
+    // PostgreSQL via Hyperdrive (with local dev connection)
+    hyperdriveBinding('DATABASE', 'hyperdrive-postgres-config', 'postgresql://localhost:5432/devdb'),
     
     // D1 for SQLite data
     d1Binding('ANALYTICS', 'analytics-db', 'analytics-db-id'),
