@@ -134,8 +134,13 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         },
         {
           type: "add",
-          path: `${basePath}/wrangler.toml`,
-          templateFile: "templates/worker/wrangler.toml.hbs",
+          path: `${basePath}/wrangler.config.ts`,
+          templateFile: "templates/worker/wrangler.config.ts.hbs",
+        },
+        {
+          type: "add",
+          path: `${basePath}/scripts/generate-config.ts`,
+          templateFile: "templates/worker/scripts/generate-config.ts.hbs",
         },
         {
           type: "add",
@@ -185,93 +190,78 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
       }
 
       // Post-generation actions
-      actions.push(
-        {
-          type: "custom",
-          name: "Install dependencies",
-          action: () => {
-            try {
-              console.log("\n📦 Installing dependencies...");
-              execSync("pnpm install", {
-                cwd: process.cwd(),
-                stdio: "inherit",
-              });
-              return "✅ Dependencies installed successfully";
-            } catch (error) {
-              return `⚠️  Failed to install dependencies: ${error}`;
-            }
-          },
-        },
-        {
-          type: "custom",
-          name: "Type check",
-          action: () => {
-            try {
-              console.log("\n🔍 Running type check...");
-              execSync(`pnpm --filter @repo/${name} type-check`, {
-                cwd: process.cwd(),
-                stdio: "inherit",
-              });
-              return "✅ Type check passed";
-            } catch (error) {
-              return "⚠️  Type check failed - please review the generated code";
-            }
-          },
-        },
-        {
-          type: "custom",
-          name: "Lint check",
-          action: () => {
-            try {
-              console.log("\n✨ Running lint check...");
-              execSync(`pnpm --filter @repo/${name} lint`, {
-                cwd: process.cwd(),
-                stdio: "inherit",
-              });
-              return "✅ Lint check passed";
-            } catch (error) {
-              return "⚠️  Lint check failed - please review the generated code";
-            }
-          },
+      actions.push(() => {
+        try {
+          console.log("\n📦 Installing dependencies...");
+          execSync("pnpm install", {
+            cwd: process.cwd(),
+            stdio: "inherit",
+          });
+          return "✅ Dependencies installed successfully";
+        } catch (error) {
+          return `⚠️  Failed to install dependencies: ${error}`;
         }
-      );
+      });
+
+      actions.push(() => {
+        try {
+          console.log("\n🔍 Running type check...");
+          execSync(`pnpm --filter @repo/${name} type-check`, {
+            cwd: process.cwd(),
+            stdio: "inherit",
+          });
+          return "✅ Type check passed";
+        } catch (error) {
+          return "⚠️  Type check failed - please review the generated code";
+        }
+      });
+
+      actions.push(() => {
+        try {
+          console.log("\n✨ Running lint check...");
+          execSync(`pnpm --filter @repo/${name} lint`, {
+            cwd: process.cwd(),
+            stdio: "inherit",
+          });
+          return "✅ Lint check passed";
+        } catch (error) {
+          return "⚠️  Lint check failed - please review the generated code";
+        }
+      });
 
       // Success message
-      actions.push({
-        type: "custom",
-        name: "Success message",
-        action: () => {
-          console.log("\n🎉 Worker created successfully!");
-          console.log(`\n📁 Location: apps/${name}`);
-          console.log("\n🚀 Next steps:");
-          console.log(`  1. cd apps/${name}`);
-          console.log("  2. Review and update .env.example");
-          console.log("  3. Configure wrangler.toml with your account ID");
+      actions.push(() => {
+        console.log("\n🎉 Worker created successfully!");
+        console.log(`\n📁 Location: apps/${name}`);
+        console.log("\n🚀 Next steps:");
+        console.log(`  1. cd apps/${name}`);
+        console.log("  2. Review and update .env.example");
+        console.log("  3. Configure wrangler.config.ts with your account ID");
+        console.log("  4. Run 'pnpm config:generate' to create wrangler.toml");
 
-          if (bindings.includes("d1")) {
-            console.log("  4. Create D1 database: npx wrangler d1 create <db-name>");
-            console.log("  5. Update wrangler.toml with database ID");
-          }
+        if (bindings.includes("d1")) {
+          console.log("  5. Create D1 database: npx wrangler d1 create <db-name>");
+          console.log("  6. Update wrangler.config.ts with database ID");
+        }
 
-          if (bindings.includes("kv")) {
-            console.log("  4. Create KV namespace: npx wrangler kv:namespace create <namespace>");
-            console.log("  5. Update wrangler.toml with KV namespace ID");
-          }
+        if (bindings.includes("kv")) {
+          console.log("  5. Create KV namespace: npx wrangler kv:namespace create <namespace>");
+          console.log("  6. Update wrangler.config.ts with KV namespace ID");
+        }
 
-          if (bindings.includes("r2")) {
-            console.log("  4. Create R2 bucket: npx wrangler r2 bucket create <bucket-name>");
-            console.log("  5. Update wrangler.toml with bucket name");
-          }
+        if (bindings.includes("r2")) {
+          console.log("  5. Create R2 bucket: npx wrangler r2 bucket create <bucket-name>");
+          console.log("  6. Update wrangler.config.ts with bucket name");
+        }
 
-          console.log(`\n💻 Development:`);
-          console.log(`  pnpm --filter @repo/${name} dev`);
-          console.log(`\n🧪 Testing:`);
-          console.log(`  pnpm --filter @repo/${name} test`);
-          console.log(`\n🚢 Deployment:`);
-          console.log(`  pnpm --filter @repo/${name} deploy`);
+        console.log(`\n💻 Development:`);
+        console.log(`  pnpm --filter @repo/${name} dev`);
+        console.log(`\n🧪 Testing:`);
+        console.log(`  pnpm --filter @repo/${name} test`);
+        console.log(`\n🚢 Deployment:`);
+        console.log(`  pnpm --filter @repo/${name} deploy`);
 
-          return "";
-        },
+        return "";
       });
 
       return actions;

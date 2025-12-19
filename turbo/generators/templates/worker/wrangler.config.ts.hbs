@@ -1,0 +1,67 @@
+import { defineConfig{{#if bindings}}, {{#if (includes bindings "d1")}}d1Binding{{/if}}{{#if (and (includes bindings "d1") (or (includes bindings "kv") (includes bindings "r2") (includes bindings "do")))}}, {{/if}}{{#if (includes bindings "kv")}}kvBinding{{/if}}{{#if (and (includes bindings "kv") (or (includes bindings "r2") (includes bindings "do")))}}, {{/if}}{{#if (includes bindings "r2")}}r2Binding{{/if}}{{#if (and (includes bindings "r2") (includes bindings "do"))}}, {{/if}}{{#if (includes bindings "do")}}durableObjectBinding{{/if}}{{/if}} } from '@repo/wrangler-config';
+
+export default defineConfig({
+  name: '{{ kebabCase name }}',
+  main: '{{#if (eq workerType "scheduled")}}src/scheduled.ts{{else}}src/index.ts{{/if}}',
+  compatibility_date: '2024-01-01',
+  compatibility_flags: ['nodejs_compat'],
+{{#if bindings}}
+  bindings: [
+{{#if (includes bindings "d1")}}
+    d1Binding('DB', '{{ kebabCase name }}-db', '{{ kebabCase name }}-db-dev'),
+{{/if}}
+{{#if (includes bindings "kv")}}
+    kvBinding('CACHE', 'YOUR_KV_NAMESPACE_ID'),
+{{/if}}
+{{#if (includes bindings "r2")}}
+    r2Binding('STORAGE', '{{ kebabCase name }}-bucket'),
+{{/if}}
+{{#if (includes bindings "do")}}
+    durableObjectBinding('MY_DURABLE_OBJECT', 'MyDurableObject', '{{ kebabCase name }}'),
+{{/if}}
+  ],
+{{/if}}
+{{#if (eq workerType "scheduled")}}
+  triggers: {
+    crons: ['0 */6 * * *'], // Run every 6 hours
+  },
+{{else if (eq workerType "both")}}
+  triggers: {
+    crons: ['0 */6 * * *'], // Run every 6 hours
+  },
+{{/if}}
+  environments: {
+    development: {
+      name: '{{ kebabCase name }}-dev',
+{{#if bindings}}
+      bindings: [
+{{#if (includes bindings "d1")}}
+        d1Binding('DB', '{{ kebabCase name }}-db-dev', '{{ kebabCase name }}-db-dev'),
+{{/if}}
+{{#if (includes bindings "kv")}}
+        kvBinding('CACHE', 'YOUR_KV_NAMESPACE_ID_DEV'),
+{{/if}}
+{{#if (includes bindings "r2")}}
+        r2Binding('STORAGE', '{{ kebabCase name }}-bucket-dev'),
+{{/if}}
+      ],
+{{/if}}
+    },
+    production: {
+      name: '{{ kebabCase name }}-prod',
+{{#if bindings}}
+      bindings: [
+{{#if (includes bindings "d1")}}
+        d1Binding('DB', '{{ kebabCase name }}-db-prod', '{{ kebabCase name }}-db-prod'),
+{{/if}}
+{{#if (includes bindings "kv")}}
+        kvBinding('CACHE', 'YOUR_KV_NAMESPACE_ID_PROD'),
+{{/if}}
+{{#if (includes bindings "r2")}}
+        r2Binding('STORAGE', '{{ kebabCase name }}-bucket-prod'),
+{{/if}}
+      ],
+{{/if}}
+    },
+  },
+});
