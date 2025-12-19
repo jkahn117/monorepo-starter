@@ -3,8 +3,13 @@
   "globalDependencies": [".env", "tsconfig.json"],
   "globalEnv": ["NODE_ENV", "CLOUDFLARE_ACCOUNT_ID"],
   "tasks": {
+    "config:generate": {
+      "cache": true,
+      "outputs": ["wrangler.toml"],
+      "inputs": ["wrangler.config.ts", "../../packages/wrangler-config/**"]
+    },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "config:generate"],
       "outputs": ["dist/**", ".wrangler/deploy/**", "!.wrangler/state/**"],
       "env": ["CLOUDFLARE_ACCOUNT_ID", "NODE_ENV"],
       "inputs": ["src/**", "wrangler.toml", "package.json", "tsconfig.json"]
@@ -12,7 +17,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "config:generate"]
     },
     "test": {
       "dependsOn": ["^build"],

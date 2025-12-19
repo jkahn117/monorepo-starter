@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "config:generate": "tsx scripts/generate-config.ts",
     "dev": "wrangler dev",
     "build": "tsc --noEmit",
     "deploy": "wrangler deploy",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@repo/db": "workspace:*",
     "@repo/shared-types": "workspace:*",
+    "@repo/wrangler-config": "workspace:*",
     "hono": "^4.0.0"
   },
   "devDependencies": {
@@ -23,6 +25,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/prettier-config": "workspace:*",
     "@repo/tsconfig": "workspace:*",
+    "tsx": "^4.7.0",
     "typescript": "^5.3.0",
     "vitest": "^1.1.0",
     "wrangler": "^3.22.0"

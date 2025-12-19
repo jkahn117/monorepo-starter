@@ -120,56 +120,56 @@ This document provides a detailed, actionable task breakdown for implementing th
 
 ### Configuration Builder
 
-- [ ] T044 Implement defineConfig() function (packages/wrangler-config/src/builders/worker.ts)
-- [ ] T045 Implement config validation inside defineConfig() (packages/wrangler-config/src/builders/worker.ts)
-- [ ] T046 Add default values for optional fields in defineConfig() (packages/wrangler-config/src/builders/worker.ts)
-- [ ] T047 Write unit tests for defineConfig() - happy path (packages/wrangler-config/test/unit/worker.test.ts)
-- [ ] T048 Write unit tests for defineConfig() - missing required fields (packages/wrangler-config/test/unit/worker.test.ts)
-- [ ] T049 Write unit tests for defineConfig() - default values (packages/wrangler-config/test/unit/worker.test.ts)
+- [X] T044 Implement defineConfig() function (packages/wrangler-config/src/builders/worker.ts)
+- [X] T045 Implement config validation inside defineConfig() (packages/wrangler-config/src/builders/worker.ts)
+- [X] T046 Add default values for optional fields in defineConfig() (packages/wrangler-config/src/builders/worker.ts)
+- [X] T047 Write unit tests for defineConfig() - happy path (packages/wrangler-config/test/unit/worker.test.ts)
+- [X] T048 Write unit tests for defineConfig() - missing required fields (packages/wrangler-config/test/unit/worker.test.ts)
+- [X] T049 Write unit tests for defineConfig() - default values (packages/wrangler-config/test/unit/worker.test.ts)
 
 ### TOML Generator
 
-- [ ] T050 Implement generateTOML() function using @ltd/j-toml (packages/wrangler-config/src/generators/toml.ts)
-- [ ] T051 Implement proper escaping for strings in TOML (packages/wrangler-config/src/generators/toml.ts)
-- [ ] T052 Implement binding serialization to TOML format (packages/wrangler-config/src/generators/toml.ts)
-- [ ] T053 Write unit tests for generateTOML() - basic config (packages/wrangler-config/test/unit/generators.test.ts)
-- [ ] T054 Write unit tests for generateTOML() - with bindings (packages/wrangler-config/test/unit/generators.test.ts)
-- [ ] T055 Write unit tests for generateTOML() - special characters (packages/wrangler-config/test/unit/generators.test.ts)
+- [X] T050 Implement generateTOML() function using @ltd/j-toml (packages/wrangler-config/src/generators/toml.ts)
+- [X] T051 Implement proper escaping for strings in TOML (packages/wrangler-config/src/generators/toml.ts)
+- [X] T052 Implement binding serialization to TOML format (packages/wrangler-config/src/generators/toml.ts)
+- [X] T053 Write unit tests for generateTOML() - basic config (packages/wrangler-config/test/unit/generators.test.ts)
+- [X] T054 Write unit tests for generateTOML() - with bindings (packages/wrangler-config/test/unit/generators.test.ts)
+- [X] T055 Write unit tests for generateTOML() - special characters (packages/wrangler-config/test/unit/generators.test.ts)
 
 ### File Writer
 
-- [ ] T056 Implement writeConfigFile() function (packages/wrangler-config/src/generators/toml.ts)
-- [ ] T057 Add directory creation logic to writeConfigFile() (packages/wrangler-config/src/generators/toml.ts)
-- [ ] T058 Write unit tests for writeConfigFile() (packages/wrangler-config/test/unit/generators.test.ts)
+- [X] T056 Implement writeConfigFile() function (packages/wrangler-config/src/generators/toml.ts)
+- [X] T057 Add directory creation logic to writeConfigFile() (packages/wrangler-config/src/generators/toml.ts)
+- [X] T058 Write unit tests for writeConfigFile() (packages/wrangler-config/test/unit/generators.test.ts)
 
 ### Integration Test
 
-- [ ] T059 [US1] Write integration test: Create shared config, reference from two workers, verify identical output (packages/wrangler-config/test/integration/config-inheritance.test.ts)
+- [X] T059 [US1] Write integration test: Create shared config, reference from two workers, verify identical output (packages/wrangler-config/test/integration/config-inheritance.test.ts)
 
 ### Update Main Exports
 
-- [ ] T060 Export all builder functions from main index (packages/wrangler-config/src/index.ts)
-- [ ] T061 Export all generator functions from main index (packages/wrangler-config/src/index.ts)
+- [X] T060 Export all builder functions from main index (packages/wrangler-config/src/index.ts)
+- [X] T061 Export all generator functions from main index (packages/wrangler-config/src/index.ts)
 
 ### Example Worker Migration
 
-- [ ] T062 [US1] Create wrangler.config.ts for example-worker using defineConfig() (apps/example-worker/wrangler.config.ts)
-- [ ] T063 [US1] Add config:generate script to example-worker package.json (apps/example-worker/package.json)
-- [ ] T064 [US1] Update turbo.json to add config:generate task with caching (turbo.json)
-- [ ] T065 [US1] Update turbo.json build task to depend on config:generate (turbo.json)
-- [ ] T066 [US1] Update turbo.json dev task to depend on config:generate (turbo.json)
-- [ ] T067 [US1] Run pnpm config:generate in example-worker and verify wrangler.toml is generated (apps/example-worker/wrangler.toml)
-- [ ] T068 [US1] Run pnpm dev in example-worker and verify wrangler dev starts successfully
+- [X] T062 [US1] Create wrangler.config.ts for example-worker using defineConfig() (apps/example-worker/wrangler.config.ts)
+- [X] T063 [US1] Add config:generate script to example-worker package.json (apps/example-worker/package.json)
+- [X] T064 [US1] Update turbo.json to add config:generate task with caching (turbo.json)
+- [X] T065 [US1] Update turbo.json build task to depend on config:generate (turbo.json)
+- [X] T066 [US1] Update turbo.json dev task to depend on config:generate (turbo.json)
+- [X] T067 [US1] Run pnpm config:generate in example-worker and verify wrangler.toml is generated (apps/example-worker/wrangler.toml)
+- [X] T068 [US1] Run pnpm dev in example-worker and verify wrangler dev starts successfully
 
 ### Contract Test
 
-- [ ] T069 [US1] Write contract test: Generate wrangler.toml and verify wrangler CLI can parse it (packages/wrangler-config/test/contract/wrangler-compatibility.test.ts)
+- [X] T069 [US1] Write contract test: Generate wrangler.toml and verify wrangler CLI can parse it (packages/wrangler-config/test/contract/wrangler-compatibility.test.ts)
 
 ### Verification
 
-- [ ] T070 [US1] Verify example-worker builds successfully with generated config
-- [ ] T071 [US1] Verify example-worker can be deployed (dry-run if no Cloudflare account)
-- [ ] T072 [US1] Run all tests and verify >90% coverage
+- [X] T070 [US1] Verify example-worker builds successfully with generated config
+- [X] T071 [US1] Verify example-worker can be deployed (dry-run if no Cloudflare account)
+- [X] T072 [US1] Run all tests and verify >90% coverage
 
 **Commit checkpoint**: ✅ User Story 1 complete - Centralized configuration working
 
