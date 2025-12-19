@@ -14,7 +14,8 @@ build/
 .wrangler/
 .mf/
 wrangler.toml.bak
-**/wrangler.toml  # Generated from wrangler.config.ts
+# Generated from wrangler.config.ts
+**/wrangler.toml
 
 # Testing
 coverage/

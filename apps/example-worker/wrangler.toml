@@ -1,0 +1,29 @@
+
+name = 'example-worker'
+main = 'src/index.ts'
+compatibility_date = '2024-01-01'
+compatibility_flags = [
+  'nodejs_compat',
+]
+
+
+[[d1_databases]]
+binding = 'DB'
+database_name = 'example-db'
+database_id = 'example-db-dev'
+
+[env.development]
+name = 'example-worker-dev'
+
+[[env.development.d1_databases]]
+binding = 'DB'
+database_name = 'example-db-dev'
+database_id = 'example-db-dev'
+
+[env.production]
+name = 'example-worker-prod'
+
+[[env.production.d1_databases]]
+binding = 'DB'
+database_name = 'example-db-prod'
+database_id = 'example-db-prod'

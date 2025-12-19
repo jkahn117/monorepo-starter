@@ -99,7 +99,7 @@ function bindingToTOML(binding: Binding): Record<string, unknown> {
       return {
         binding: binding.binding,
         class_name: binding.class_name,
-        ...(binding.script_name && { script_name: binding.script_name }),
+        ...(binding.script_name && { name: binding.script_name }),
       };
   }
 }
@@ -230,7 +230,7 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
 function serializeBindingSection(sectionName: string, bindings: Record<string, unknown>[]): string {
   return bindings
     .map((binding) => {
-      const lines = [`[[${sectionName}]]`];
+      const lines = [sectionName === "ai" ? `[${sectionName}]` : `[[${sectionName}]]`];
       for (const [key, value] of Object.entries(binding)) {
         if (typeof value === 'string') {
           lines.push(`${key} = '${value}'`);
@@ -246,7 +246,7 @@ function serializeBindingSection(sectionName: string, bindings: Record<string, u
 export function generateTOML(config: WranglerConfig, options?: GenerateOptions): string {
   try {
     const obj = configToTOMLObject(config);
-    
+
     // Extract bindings to handle separately
     const d1Bindings = obj['d1_databases'] as Record<string, unknown>[] | undefined;
     const kvBindings = obj['kv_namespaces'] as Record<string, unknown>[] | undefined;
@@ -256,7 +256,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
     const workflowsBindings = obj['workflows'] as Record<string, unknown>[] | undefined;
     const servicesBindings = obj['services'] as Record<string, unknown>[] | undefined;
     const aeBindings = obj['analytics_engine_datasets'] as Record<string, unknown>[] | undefined;
-    
+
     // Remove bindings from main object (will add manually)
     delete obj['d1_databases'];
     delete obj['kv_namespaces'];
@@ -266,7 +266,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
     delete obj['workflows'];
     delete obj['services'];
     delete obj['analytics_engine_datasets'];
-    
+
     // Generate base TOML
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const baseLines = stringify(obj as any, {
@@ -274,9 +274,9 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
       newlineAround: 'section',
       indent: options?.format === 'compact' ? 0 : 2,
     });
-    
+
     let result = Array.isArray(baseLines) ? baseLines.join('\n') : baseLines;
-    
+
     // Append binding sections with proper [[array]] syntax
     if (d1Bindings && d1Bindings.length > 0) {
       result += '\n\n' + serializeBindingSection('d1_databases', d1Bindings);
@@ -302,7 +302,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
     if (aeBindings && aeBindings.length > 0) {
       result += '\n\n' + serializeBindingSection('analytics_engine_datasets', aeBindings);
     }
-    
+
     // Handle environment-specific configurations
     if (config.env && Object.keys(config.env).length > 0) {
       for (const [envName, envConfig] of Object.entries(config.env)) {
@@ -319,7 +319,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
             result += `\n${key} = '${value}'`;
           }
         }
-        
+
         // Environment-specific bindings
         if (envConfig.bindings && envConfig.bindings.length > 0) {
           const envD1 = envConfig.bindings.filter((b) => b.type === 'd1').map(bindingToTOML);
@@ -328,7 +328,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
           const envHyperdrive = envConfig.bindings.filter((b) => b.type === 'hyperdrive').map(bindingToTOML);
           const envAI = envConfig.bindings.filter((b) => b.type === 'ai').map(bindingToTOML);
           const envWorkflows = envConfig.bindings.filter((b) => b.type === 'workflows').map(bindingToTOML);
-          
+
           if (envD1.length > 0) {
             result += '\n\n' + serializeBindingSection(`env.${envName}.d1_databases`, envD1);
           }
@@ -350,7 +350,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
         }
       }
     }
-    
+
     return result;
   } catch (error) {
     throw new GenerationError(
