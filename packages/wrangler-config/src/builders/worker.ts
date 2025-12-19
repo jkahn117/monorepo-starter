@@ -63,6 +63,9 @@ export function defineConfig(config: Partial<WranglerConfig>): WranglerConfig {
 
   if (!result.success) {
     const firstError = result.error.issues[0];
+    if (!firstError) {
+      throw new ConfigValidationError('Configuration validation failed', 'validation_error', '', 'valid config', configWithDefaults);
+    }
     throw new ConfigValidationError(
       firstError.message,
       firstError.code,

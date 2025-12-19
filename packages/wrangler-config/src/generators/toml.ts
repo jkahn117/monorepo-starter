@@ -105,19 +105,19 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
 
   // Optional fields
   if (config.accountId) {
-    obj.account_id = config.accountId;
+    obj['account_id'] = config.accountId;
   }
 
   if (config.compatibility_flags && config.compatibility_flags.length > 0) {
-    obj.compatibility_flags = config.compatibility_flags;
+    obj['compatibility_flags'] = config.compatibility_flags;
   }
 
   if (config.node_compat) {
-    obj.node_compat = config.node_compat;
+    obj['node_compat'] = config.node_compat;
   }
 
   if (config.vars && Object.keys(config.vars).length > 0) {
-    obj.vars = config.vars;
+    obj['vars'] = config.vars;
   }
 
   // Bindings (grouped by type)
@@ -132,56 +132,56 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
     const hyperdriveBindings = config.bindings.filter((b) => b.type === 'hyperdrive');
 
     if (d1Bindings.length > 0) {
-      obj.d1_databases = d1Bindings.map(bindingToTOML);
+      obj['d1_databases'] = d1Bindings.map(bindingToTOML);
     }
 
     if (kvBindings.length > 0) {
-      obj.kv_namespaces = kvBindings.map(bindingToTOML);
+      obj['kv_namespaces'] = kvBindings.map(bindingToTOML);
     }
 
     if (r2Bindings.length > 0) {
-      obj.r2_buckets = r2Bindings.map(bindingToTOML);
+      obj['r2_buckets'] = r2Bindings.map(bindingToTOML);
     }
 
     if (doBindings.length > 0) {
-      obj.durable_objects = { bindings: doBindings.map(bindingToTOML) };
+      obj['durable_objects'] = { bindings: doBindings.map(bindingToTOML) };
     }
 
     if (serviceBindings.length > 0) {
-      obj.services = serviceBindings.map(bindingToTOML);
+      obj['services'] = serviceBindings.map(bindingToTOML);
     }
 
     if (aeBindings.length > 0) {
-      obj.analytics_engine_datasets = aeBindings.map(bindingToTOML);
+      obj['analytics_engine_datasets'] = aeBindings.map(bindingToTOML);
     }
 
     if (queueBindings.length > 0) {
-      obj.queues = { producers: queueBindings.map(bindingToTOML) };
+      obj['queues'] = { producers: queueBindings.map(bindingToTOML) };
     }
 
     if (hyperdriveBindings.length > 0) {
-      obj.hyperdrive = hyperdriveBindings.map(bindingToTOML);
+      obj['hyperdrive'] = hyperdriveBindings.map(bindingToTOML);
     }
   }
 
   // Routes
   if (config.routes && config.routes.length > 0) {
-    obj.routes = config.routes;
+    obj['routes'] = config.routes;
   }
 
   // Triggers
   if (config.triggers) {
     if (config.triggers.crons && config.triggers.crons.length > 0) {
-      obj.triggers = { crons: config.triggers.crons };
+      obj['triggers'] = { crons: config.triggers.crons };
     }
     if (config.triggers.queues && config.triggers.queues.length > 0) {
-      obj.queues = { consumers: config.triggers.queues };
+      obj['queues'] = { consumers: config.triggers.queues };
     }
   }
 
   // Environment configurations
   if (config.env && Object.keys(config.env).length > 0) {
-    obj.env = Object.fromEntries(
+    obj['env'] = Object.fromEntries(
       Object.entries(config.env).map(([name, envConfig]) => [
         name,
         {

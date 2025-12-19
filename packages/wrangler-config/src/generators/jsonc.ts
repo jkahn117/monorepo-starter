@@ -3,7 +3,7 @@
  */
 
 import type { WranglerConfig } from '../types/config.js';
-import type { GenerateOptions, GenerationError } from './toml.js';
+import type { GenerateOptions } from './toml.js';
 
 /**
  * Generate wrangler.jsonc content from configuration
@@ -36,19 +36,19 @@ export function generateJSONC(config: WranglerConfig, options?: GenerateOptions)
   };
 
   if (config.accountId) {
-    obj.account_id = config.accountId;
+    obj['account_id'] = config.accountId;
   }
 
   if (config.compatibility_flags && config.compatibility_flags.length > 0) {
-    obj.compatibility_flags = config.compatibility_flags;
+    obj['compatibility_flags'] = config.compatibility_flags;
   }
 
   if (config.node_compat) {
-    obj.node_compat = config.node_compat;
+    obj['node_compat'] = config.node_compat;
   }
 
   if (config.vars && Object.keys(config.vars).length > 0) {
-    obj.vars = config.vars;
+    obj['vars'] = config.vars;
   }
 
   // Add bindings (simplified for now)
@@ -57,9 +57,9 @@ export function generateJSONC(config: WranglerConfig, options?: GenerateOptions)
     const kv = config.bindings.filter((b) => b.type === 'kv');
     const r2 = config.bindings.filter((b) => b.type === 'r2');
 
-    if (d1.length > 0) obj.d1_databases = d1;
-    if (kv.length > 0) obj.kv_namespaces = kv;
-    if (r2.length > 0) obj.r2_buckets = r2;
+    if (d1.length > 0) obj['d1_databases'] = d1;
+    if (kv.length > 0) obj['kv_namespaces'] = kv;
+    if (r2.length > 0) obj['r2_buckets'] = r2;
   }
 
   return JSON.stringify(obj, null, indent);

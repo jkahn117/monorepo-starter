@@ -113,10 +113,9 @@ describe('defineConfig()', () => {
     it('throws when name is missing', () => {
       expect(() =>
         defineConfig({
-          // @ts-expect-error - Testing missing required field
           main: 'src/index.ts',
           compatibility_date: '2024-01-01',
-        }),
+        } as any),
       ).toThrow(ConfigValidationError);
     });
 
@@ -124,9 +123,8 @@ describe('defineConfig()', () => {
       expect(() =>
         defineConfig({
           name: 'my-worker',
-          // @ts-expect-error - Testing missing required field
           compatibility_date: '2024-01-01',
-        }),
+        } as any),
       ).toThrow(ConfigValidationError);
     });
 
@@ -135,18 +133,16 @@ describe('defineConfig()', () => {
         defineConfig({
           name: 'my-worker',
           main: 'src/index.ts',
-          // @ts-expect-error - Testing missing required field
-        }),
+        } as any),
       ).toThrow(ConfigValidationError);
     });
 
     it('provides helpful error message for missing name', () => {
       try {
         defineConfig({
-          // @ts-expect-error - Testing missing required field
           main: 'src/index.ts',
           compatibility_date: '2024-01-01',
-        });
+        } as any);
       } catch (error) {
         expect(error).toBeInstanceOf(ConfigValidationError);
         expect((error as ConfigValidationError).path).toBe('name');
@@ -219,8 +215,8 @@ describe('defineConfig()', () => {
       });
 
       expect(config.bindings).toHaveLength(2);
-      expect(config.bindings![0].type).toBe('d1');
-      expect(config.bindings![1].type).toBe('kv');
+      expect(config.bindings?.[0]?.type).toBe('d1');
+      expect(config.bindings?.[1]?.type).toBe('kv');
     });
   });
 });

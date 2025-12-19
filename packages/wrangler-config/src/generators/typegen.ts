@@ -56,7 +56,7 @@ export function discoverRPCWorkers(configs: WranglerConfig[]): ServiceBindingDec
  */
 export async function generateRPCTypes(
   workerName: string,
-  sourcePath: string,
+  _sourcePath: string,
   outputDir: string,
 ): Promise<RPCTypeDefinition> {
   // Placeholder implementation
@@ -120,7 +120,7 @@ export async function storeGeneratedTypes(
  */
 export async function needsRegeneration(
   workerName: string,
-  sourcePath: string,
+  _sourcePath: string,
   typesPath: string,
 ): Promise<boolean> {
   // Placeholder implementation
@@ -130,7 +130,7 @@ export async function needsRegeneration(
   // 3. Check for source changes
   
   console.log(`Checking if ${workerName} needs type regeneration`);
-  console.log(`Source: ${sourcePath}, Types: ${typesPath}`);
+  console.log(`Types path: ${typesPath}`);
   
   return false; // Placeholder
 }

@@ -39,7 +39,7 @@ describe('Wrangler CLI Compatibility', () => {
     // Try to parse with wrangler (dry-run)
     // Note: This test may be skipped in CI if wrangler is not installed
     try {
-      const { stdout, stderr } = await execAsync('wrangler --version', {
+      const { stdout } = await execAsync('wrangler --version', {
         cwd: testDir,
       });
       

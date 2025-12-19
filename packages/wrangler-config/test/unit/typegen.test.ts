@@ -32,8 +32,8 @@ describe('discoverRPCWorkers()', () => {
     const rpcWorkers = discoverRPCWorkers([workerA, workerB, workerC]);
 
     expect(rpcWorkers).toHaveLength(1);
-    expect(rpcWorkers[0].workerName).toBe('worker-a');
-    expect(rpcWorkers[0].exposeRPC).toBe(true);
+    expect(rpcWorkers[0]?.workerName).toBe('worker-a');
+    expect(rpcWorkers[0]?.exposeRPC).toBe(true);
   });
 
   it('returns empty array when no workers expose RPC', () => {
@@ -58,7 +58,7 @@ describe('discoverRPCWorkers()', () => {
 
     const rpcWorkers = discoverRPCWorkers([worker]);
 
-    expect(rpcWorkers[0].sourcePath).toBe('src/auth.ts');
+    expect(rpcWorkers[0]?.sourcePath).toBe('src/auth.ts');
   });
 });
 
@@ -75,7 +75,7 @@ describe('generateRPCTypes()', () => {
   it('constructs correct types path', async () => {
     const result = await generateRPCTypes('my-worker', 'src/index.ts', 'types');
 
-    expect(result.typesPath).toBe('types/my-worker/index.d.ts');
+    expect(result?.typesPath).toBe('types/my-worker/index.d.ts');
   });
 });
 

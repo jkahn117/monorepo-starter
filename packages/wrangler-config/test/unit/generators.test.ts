@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { generateTOML, GenerationError } from '../../src/generators/toml.js';
+import { generateTOML } from '../../src/generators/toml.js';
 import { defineConfig } from '../../src/builders/worker.js';
 import { d1Binding, kvBinding, r2Binding } from '../../src/builders/bindings.js';
 
