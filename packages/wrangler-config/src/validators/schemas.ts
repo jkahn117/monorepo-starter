@@ -163,4 +163,5 @@ export const WranglerConfigSchema = z.object({
   routes: z.array(RouteSchema).optional(),
   triggers: TriggerConfigSchema.optional(),
   env: z.record(EnvironmentConfigSchema).optional(),
+  exposeRPC: z.boolean().optional(),
 });

@@ -55,6 +55,7 @@ export function defineConfig(config: Partial<WranglerConfig>): WranglerConfig {
     routes: config.routes ?? [],
     triggers: config.triggers,
     env: config.env ?? {},
+    exposeRPC: config.exposeRPC,
   };
 
   // Validate configuration

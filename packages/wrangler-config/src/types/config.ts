@@ -53,4 +53,8 @@ export interface WranglerConfig {
   routes?: Route[];
   triggers?: TriggerConfig;
   env?: Record<string, EnvironmentConfig>;
+  /**
+   * Whether this worker exposes RPC methods for type generation
+   */
+  exposeRPC?: boolean;
 }

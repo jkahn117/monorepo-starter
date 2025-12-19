@@ -35,3 +35,13 @@ export {
 
 // Validators
 export { WranglerConfigSchema, BindingSchema } from './validators/schemas.js';
+
+// RPC Type Generation
+export {
+  discoverRPCWorkers,
+  generateRPCTypes,
+  storeGeneratedTypes,
+  needsRegeneration,
+} from './generators/typegen.js';
+
+export type { RPCTypeDefinition, ServiceBindingDeclaration } from './types/rpc.js';

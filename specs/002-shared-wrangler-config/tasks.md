@@ -183,24 +183,24 @@ This document provides a detailed, actionable task breakdown for implementing th
 
 ### RPC Type Generation Infrastructure
 
-- [ ] T073 [P] [US5] Create generated-types directory structure (packages/wrangler-config/generated-types/.gitkeep)
-- [ ] T074 [P] [US5] Add generated-types to .gitignore (packages/wrangler-config/.gitignore)
-- [ ] T075 [P] [US5] Define RPCTypeDefinition interface (packages/wrangler-config/src/types/rpc.ts)
-- [ ] T076 [P] [US5] Define ServiceBindingDeclaration interface (packages/wrangler-config/src/types/rpc.ts)
+- [X] T073 [P] [US5] Create generated-types directory structure (packages/wrangler-config/generated-types/.gitkeep)
+- [X] T074 [P] [US5] Add generated-types to .gitignore (packages/wrangler-config/.gitignore)
+- [X] T075 [P] [US5] Define RPCTypeDefinition interface (packages/wrangler-config/src/types/rpc.ts)
+- [X] T076 [P] [US5] Define ServiceBindingDeclaration interface (packages/wrangler-config/src/types/rpc.ts)
 
 ### RPC Configuration
 
-- [ ] T077 [US5] Add exposeRPC field to WranglerConfig type (packages/wrangler-config/src/types/config.ts)
-- [ ] T078 [US5] Update WranglerConfigSchema to include exposeRPC (packages/wrangler-config/src/validators/schemas.ts)
-- [ ] T079 [US5] Update defineConfig() to handle exposeRPC declaration (packages/wrangler-config/src/builders/worker.ts)
+- [X] T077 [US5] Add exposeRPC field to WranglerConfig type (packages/wrangler-config/src/types/config.ts)
+- [X] T078 [US5] Update WranglerConfigSchema to include exposeRPC (packages/wrangler-config/src/validators/schemas.ts)
+- [X] T079 [US5] Update defineConfig() to handle exposeRPC declaration (packages/wrangler-config/src/builders/worker.ts)
 
 ### Type Generation Functions
 
-- [ ] T080 [US5] Implement discoverRPCWorkers() function to scan configs (packages/wrangler-config/src/generators/typegen.ts)
-- [ ] T081 [US5] Implement generateRPCTypes() function calling wrangler types (packages/wrangler-config/src/generators/typegen.ts)
-- [ ] T082 [US5] Implement storeGeneratedTypes() to save to generated-types/[worker-name]/ (packages/wrangler-config/src/generators/typegen.ts)
-- [ ] T083 [US5] Write unit tests for discoverRPCWorkers() (packages/wrangler-config/test/unit/typegen.test.ts)
-- [ ] T084 [US5] Write unit tests for generateRPCTypes() (packages/wrangler-config/test/unit/typegen.test.ts)
+- [X] T080 [US5] Implement discoverRPCWorkers() function to scan configs (packages/wrangler-config/src/generators/typegen.ts)
+- [X] T081 [US5] Implement generateRPCTypes() function calling wrangler types (packages/wrangler-config/src/generators/typegen.ts)
+- [X] T082 [US5] Implement storeGeneratedTypes() to save to generated-types/[worker-name]/ (packages/wrangler-config/src/generators/typegen.ts)
+- [X] T083 [US5] Write unit tests for discoverRPCWorkers() (packages/wrangler-config/test/unit/typegen.test.ts)
+- [X] T084 [US5] Write unit tests for generateRPCTypes() (packages/wrangler-config/test/unit/typegen.test.ts)
 
 ### Turborepo Integration
 
