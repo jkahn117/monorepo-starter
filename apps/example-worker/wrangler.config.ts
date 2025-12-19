@@ -5,11 +5,7 @@
  * to manage Cloudflare Workers configuration in a type-safe way.
  */
 
-import {
-  defineConfig,
-  defineEnvironment,
-  d1Binding,
-} from "@repo/wrangler-config";
+import { defineConfig, d1Binding } from "@repo/wrangler-config";
 
 export default defineConfig({
   name: "example-worker",
@@ -22,14 +18,14 @@ export default defineConfig({
 
   // Environment-specific configurations
   env: {
-    development: defineEnvironment("development", {
+    development: {
       name: "example-worker-dev",
       bindings: [d1Binding("DB", "example-db-dev", "example-db-dev")],
-    }),
+    },
 
-    production: defineEnvironment("production", {
+    production: {
       name: "example-worker-prod",
       bindings: [d1Binding("DB", "example-db-prod", "example-db-prod")],
-    }),
+    },
   },
 });

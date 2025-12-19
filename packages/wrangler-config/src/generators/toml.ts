@@ -3,10 +3,10 @@
  */
 
 import { stringify } from '@ltd/j-toml';
-import { writeFile, mkdir } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import type { WranglerConfig } from '../types/config.js';
 import type { Binding } from '../types/bindings.js';
+import type { WranglerConfig } from '../types/config.js';
 
 /**
  * Generation options
@@ -200,33 +200,20 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
     }
   }
 
-  // Environment configurations
-  if (config.env && Object.keys(config.env).length > 0) {
-    obj['env'] = Object.fromEntries(
-      Object.entries(config.env).map(([name, envConfig]) => [
-        name,
-        {
-          ...(envConfig.name && { name: envConfig.name }),
-          ...(envConfig.accountId && { account_id: envConfig.accountId }),
-          ...(envConfig.routes && envConfig.routes.length > 0 && { routes: envConfig.routes }),
-          ...(envConfig.vars && Object.keys(envConfig.vars).length > 0 && { vars: envConfig.vars }),
-          // TODO: Add environment-specific bindings
-        },
-      ]),
-    );
-  }
+  // Don't include env in the main object - will be handled separately
+  // to allow proper [[env.NAME.binding]] syntax
 
   return obj;
 }
 
 /**
  * Generate wrangler.toml content from configuration
- * 
+ *
  * @param config - Wrangler configuration
  * @param options - Generation options
  * @returns TOML string
  * @throws GenerationError if generation fails
- * 
+ *
  * @example
  * ```ts
  * const toml = generateTOML(config);
@@ -237,15 +224,134 @@ function configToTOMLObject(config: WranglerConfig): Record<string, unknown> {
  * // ...
  * ```
  */
+/**
+ * Serialize array-of-tables binding section
+ */
+function serializeBindingSection(sectionName: string, bindings: Record<string, unknown>[]): string {
+  return bindings
+    .map((binding) => {
+      const lines = [`[[${sectionName}]]`];
+      for (const [key, value] of Object.entries(binding)) {
+        if (typeof value === 'string') {
+          lines.push(`${key} = '${value}'`);
+        } else if (typeof value === 'number' || typeof value === 'boolean') {
+          lines.push(`${key} = ${value}`);
+        }
+      }
+      return lines.join('\n');
+    })
+    .join('\n\n');
+}
+
 export function generateTOML(config: WranglerConfig, options?: GenerateOptions): string {
   try {
     const obj = configToTOMLObject(config);
+    
+    // Extract bindings to handle separately
+    const d1Bindings = obj['d1_databases'] as Record<string, unknown>[] | undefined;
+    const kvBindings = obj['kv_namespaces'] as Record<string, unknown>[] | undefined;
+    const r2Bindings = obj['r2_buckets'] as Record<string, unknown>[] | undefined;
+    const hyperdriveBindings = obj['hyperdrive'] as Record<string, unknown>[] | undefined;
+    const aiBindings = obj['ai'] as Record<string, unknown>[] | undefined;
+    const workflowsBindings = obj['workflows'] as Record<string, unknown>[] | undefined;
+    const servicesBindings = obj['services'] as Record<string, unknown>[] | undefined;
+    const aeBindings = obj['analytics_engine_datasets'] as Record<string, unknown>[] | undefined;
+    
+    // Remove bindings from main object (will add manually)
+    delete obj['d1_databases'];
+    delete obj['kv_namespaces'];
+    delete obj['r2_buckets'];
+    delete obj['hyperdrive'];
+    delete obj['ai'];
+    delete obj['workflows'];
+    delete obj['services'];
+    delete obj['analytics_engine_datasets'];
+    
+    // Generate base TOML
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return stringify(obj as any, {
+    const baseLines = stringify(obj as any, {
       newline: '\n',
       newlineAround: 'section',
       indent: options?.format === 'compact' ? 0 : 2,
     });
+    
+    let result = Array.isArray(baseLines) ? baseLines.join('\n') : baseLines;
+    
+    // Append binding sections with proper [[array]] syntax
+    if (d1Bindings && d1Bindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('d1_databases', d1Bindings);
+    }
+    if (kvBindings && kvBindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('kv_namespaces', kvBindings);
+    }
+    if (r2Bindings && r2Bindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('r2_buckets', r2Bindings);
+    }
+    if (hyperdriveBindings && hyperdriveBindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('hyperdrive', hyperdriveBindings);
+    }
+    if (aiBindings && aiBindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('ai', aiBindings);
+    }
+    if (workflowsBindings && workflowsBindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('workflows', workflowsBindings);
+    }
+    if (servicesBindings && servicesBindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('services', servicesBindings);
+    }
+    if (aeBindings && aeBindings.length > 0) {
+      result += '\n\n' + serializeBindingSection('analytics_engine_datasets', aeBindings);
+    }
+    
+    // Handle environment-specific configurations
+    if (config.env && Object.keys(config.env).length > 0) {
+      for (const [envName, envConfig] of Object.entries(config.env)) {
+        result += `\n\n[env.${envName}]`;
+        if (envConfig.name) {
+          result += `\nname = '${envConfig.name}'`;
+        }
+        if (envConfig.accountId) {
+          result += `\naccount_id = '${envConfig.accountId}'`;
+        }
+        if (envConfig.vars && Object.keys(envConfig.vars).length > 0) {
+          result += `\n\n[env.${envName}.vars]`;
+          for (const [key, value] of Object.entries(envConfig.vars)) {
+            result += `\n${key} = '${value}'`;
+          }
+        }
+        
+        // Environment-specific bindings
+        if (envConfig.bindings && envConfig.bindings.length > 0) {
+          const envD1 = envConfig.bindings.filter((b) => b.type === 'd1').map(bindingToTOML);
+          const envKV = envConfig.bindings.filter((b) => b.type === 'kv').map(bindingToTOML);
+          const envR2 = envConfig.bindings.filter((b) => b.type === 'r2').map(bindingToTOML);
+          const envHyperdrive = envConfig.bindings.filter((b) => b.type === 'hyperdrive').map(bindingToTOML);
+          const envAI = envConfig.bindings.filter((b) => b.type === 'ai').map(bindingToTOML);
+          const envWorkflows = envConfig.bindings.filter((b) => b.type === 'workflows').map(bindingToTOML);
+          
+          if (envD1.length > 0) {
+            result += '\n\n' + serializeBindingSection(`env.${envName}.d1_databases`, envD1);
+          }
+          if (envKV.length > 0) {
+            result += '\n\n' + serializeBindingSection(`env.${envName}.kv_namespaces`, envKV);
+          }
+          if (envR2.length > 0) {
+            result += '\n\n' + serializeBindingSection(`env.${envName}.r2_buckets`, envR2);
+          }
+          if (envHyperdrive.length > 0) {
+            result += '\n\n' + serializeBindingSection(`env.${envName}.hyperdrive`, envHyperdrive);
+          }
+          if (envAI.length > 0) {
+            result += '\n\n' + serializeBindingSection(`env.${envName}.ai`, envAI);
+          }
+          if (envWorkflows.length > 0) {
+            result += '\n\n' + serializeBindingSection(`env.${envName}.workflows`, envWorkflows);
+          }
+        }
+      }
+    }
+    
+    return result;
   } catch (error) {
     throw new GenerationError(
       `Failed to generate TOML: ${error instanceof Error ? error.message : String(error)}`,
@@ -257,14 +363,14 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
 
 /**
  * Generate and write configuration file to disk
- * 
+ *
  * @param config - Wrangler configuration
  * @param outputPath - File path to write to
  * @param format - Output format (toml or jsonc)
  * @returns Promise that resolves when file is written
  * @throws GenerationError if generation fails
  * @throws Error if file cannot be written
- * 
+ *
  * @example
  * ```ts
  * await writeConfigFile(config, './wrangler.toml', 'toml');
@@ -273,7 +379,7 @@ export function generateTOML(config: WranglerConfig, options?: GenerateOptions):
 export async function writeConfigFile(
   config: WranglerConfig,
   outputPath: string,
-  format: 'toml' | 'jsonc',
+  format: 'toml' | 'jsonc' = "toml",
 ): Promise<void> {
   let content: string;
 

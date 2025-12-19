@@ -10,4 +10,7 @@ import config from "../wrangler.config.js";
 const toml = generateTOML(config);
 writeFileSync("wrangler.toml", toml, "utf-8");
 
-console.log("✅ Generated wrangler.toml");
+// Only log if verbose mode is enabled
+if (process.env.VERBOSE || process.argv.includes("--verbose")) {
+  console.log("✅ Generated wrangler.toml");
+}
