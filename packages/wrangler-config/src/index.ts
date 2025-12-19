@@ -45,3 +45,6 @@ export {
 } from './generators/typegen.js';
 
 export type { RPCTypeDefinition, ServiceBindingDeclaration } from './types/rpc.js';
+
+// JSONC Generator
+export { generateJSONC } from './generators/jsonc.js';

@@ -415,35 +415,35 @@ This document provides a detailed, actionable task breakdown for implementing th
 
 ### JSONC Generator
 
-- [ ] T177 [P] Implement generateJSONC() function using jsonc-parser (packages/wrangler-config/src/generators/jsonc.ts)
-- [ ] T178 [P] Implement comment preservation in JSONC (packages/wrangler-config/src/generators/jsonc.ts)
-- [ ] T179 [P] Write unit tests for generateJSONC() (packages/wrangler-config/test/unit/generators.test.ts)
+- [X] T177 [P] Implement generateJSONC() function using jsonc-parser (packages/wrangler-config/src/generators/jsonc.ts)
+- [X] T178 [P] Implement comment preservation in JSONC (packages/wrangler-config/src/generators/jsonc.ts)
+- [X] T179 [P] Write unit tests for generateJSONC() (packages/wrangler-config/test/unit/generators.test.ts)
 
 ### Common Binding Presets
 
-- [ ] T180 [P] Create productionD1 preset (packages/wrangler-config/src/presets/common.ts)
-- [ ] T181 [P] Create cacheKV preset (packages/wrangler-config/src/presets/common.ts)
-- [ ] T182 [P] Create storageBucket preset (packages/wrangler-config/src/presets/common.ts)
-- [ ] T183 [P] Write unit tests for binding presets (packages/wrangler-config/test/unit/presets.test.ts)
+- [X] T180 [P] Create productionD1 preset (packages/wrangler-config/src/presets/common.ts)
+- [X] T181 [P] Create cacheKV preset (packages/wrangler-config/src/presets/common.ts)
+- [X] T182 [P] Create storageBucket preset (packages/wrangler-config/src/presets/common.ts)
+- [X] T183 [P] Write unit tests for binding presets (packages/wrangler-config/test/unit/presets.test.ts)
 
 ### Update Turbo Generator
 
-- [ ] T184 Update worker generator template to use wrangler.config.ts (turbo/generators/templates/worker/wrangler.config.ts.hbs)
-- [ ] T185 Remove wrangler.toml.hbs template (turbo/generators/templates/worker/wrangler.toml.hbs)
-- [ ] T186 Update generator config.ts to include wrangler.config.ts (turbo/generators/config.ts)
-- [ ] T187 Test generator: Create new worker and verify wrangler.config.ts is created
+- [X] T184 Update worker generator template to use wrangler.config.ts (turbo/generators/templates/worker/wrangler.config.ts.hbs)
+- [X] T185 Remove wrangler.toml.hbs template (turbo/generators/templates/worker/wrangler.toml.hbs)
+- [X] T186 Update generator config.ts to include wrangler.config.ts (turbo/generators/config.ts)
+- [X] T187 Test generator: Create new worker and verify wrangler.config.ts is created
 
 ### Comprehensive Documentation
 
-- [ ] T188 Write complete README.md with API reference (packages/wrangler-config/README.md)
-- [ ] T189 Add installation instructions (packages/wrangler-config/README.md)
-- [ ] T190 Add quickstart guide with code examples (packages/wrangler-config/README.md)
-- [ ] T191 Document all builder functions with examples (packages/wrangler-config/README.md)
-- [ ] T192 Document validation functions with examples (packages/wrangler-config/README.md)
-- [ ] T193 Document environment management (packages/wrangler-config/README.md)
-- [ ] T194 Document RPC type generation (packages/wrangler-config/README.md)
-- [ ] T195 Add migration guide from manual wrangler.toml (packages/wrangler-config/README.md)
-- [ ] T196 Add troubleshooting section (packages/wrangler-config/README.md)
+- [X] T188 Write complete README.md with API reference (packages/wrangler-config/README.md)
+- [X] T189 Add installation instructions (packages/wrangler-config/README.md)
+- [X] T190 Add quickstart guide with code examples (packages/wrangler-config/README.md)
+- [X] T191 Document all builder functions with examples (packages/wrangler-config/README.md)
+- [X] T192 Document validation functions with examples (packages/wrangler-config/README.md)
+- [X] T193 Document environment management (packages/wrangler-config/README.md)
+- [X] T194 Document RPC type generation (packages/wrangler-config/README.md)
+- [X] T195 Add migration guide from manual wrangler.toml (packages/wrangler-config/README.md)
+- [X] T196 Add troubleshooting section (packages/wrangler-config/README.md)
 
 ### Update Monorepo Documentation
 
