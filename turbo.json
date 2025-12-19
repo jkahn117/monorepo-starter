@@ -1,0 +1,48 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env", "tsconfig.json"],
+  "globalEnv": ["NODE_ENV", "CLOUDFLARE_ACCOUNT_ID"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".wrangler/deploy/**", "!.wrangler/state/**"],
+      "env": ["CLOUDFLARE_ACCOUNT_ID", "NODE_ENV"],
+      "inputs": ["src/**", "wrangler.toml", "package.json", "tsconfig.json"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "inputs": [
+        "src/**/*.ts",
+        "test/**/*.ts",
+        "vitest.config.ts",
+        "package.json"
+      ]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "outputs": [],
+      "inputs": ["src/**", "eslint.config.*", "tsconfig.json"]
+    },
+    "type-check": {
+      "dependsOn": ["^build"],
+      "outputs": ["tsconfig.tsbuildinfo"]
+    },
+    "deploy": {
+      "dependsOn": ["build", "test", "lint"],
+      "cache": false,
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

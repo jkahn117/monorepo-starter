@@ -1,0 +1,121 @@
+import { Hono } from "hono";
+import type { ApiResponse, HealthCheckResponse } from "@repo/shared-types";
+import { createD1Client, sqlite } from "@repo/db";
+
+interface Env {
+  DB: D1Database;
+  // Add your other bindings here (KV, R2, etc.)
+}
+
+const app = new Hono<{ Bindings: Env }>();
+
+// Health check endpoint
+app.get("/health", (c) => {
+  const health: HealthCheckResponse = {
+    status: "ok",
+    version: "1.0.0",
+    uptime: Date.now(),
+    timestamp: new Date().toISOString(),
+  };
+  return c.json(health);
+});
+
+// Root endpoint
+app.get("/", (c) => {
+  const response: ApiResponse = {
+    message: "Hello from Cloudflare Monorepo Template!",
+    timestamp: new Date().toISOString(),
+  };
+  return c.json(response);
+});
+
+// Example route group with database
+app.get("/api/users", async (c) => {
+  try {
+    // Create database client from D1 binding
+    const db = createD1Client(c.env.DB);
+
+    // Query users from database
+    const users = await db.select().from(sqlite.users);
+
+    const response: ApiResponse<typeof users> = {
+      data: users,
+      message: "Users retrieved successfully",
+      timestamp: new Date().toISOString(),
+    };
+    return c.json(response);
+  } catch (error) {
+    // Return mock data if database is not initialized
+    const response: ApiResponse<{ id: number; email: string; name: string }[]> =
+      {
+        data: [
+          { id: 1, email: "alice@example.com", name: "Alice" },
+          { id: 2, email: "bob@example.com", name: "Bob" },
+        ],
+        message: "Users retrieved successfully (mock data)",
+        timestamp: new Date().toISOString(),
+      };
+    return c.json(response);
+  }
+});
+
+// Example POST endpoint to create a user
+app.post("/api/users", async (c) => {
+  try {
+    const body = await c.req.json<{ email: string; name: string }>();
+    const db = createD1Client(c.env.DB);
+
+    // Insert new user
+    const result = await db.insert(sqlite.users).values(body).returning();
+
+    const response: ApiResponse<typeof result> = {
+      data: result,
+      message: "User created successfully",
+      timestamp: new Date().toISOString(),
+    };
+    return c.json(response, 201);
+  } catch (error) {
+    return c.json(
+      {
+        error: "Failed to create user",
+        code: "400",
+        details: {
+          message: error instanceof Error ? error.message : "Unknown error",
+        },
+      },
+      400,
+    );
+  }
+});
+
+// 404 handler
+app.notFound((c) => {
+  return c.json(
+    {
+      error: "Not Found",
+      code: "404",
+      details: {
+        path: c.req.path,
+        method: c.req.method,
+      },
+    },
+    404,
+  );
+});
+
+// Error handler
+app.onError((err, c) => {
+  console.error(`Error: ${err.message}`);
+  return c.json(
+    {
+      error: "Internal Server Error",
+      code: "500",
+      details: {
+        message: err.message,
+      },
+    },
+    500,
+  );
+});
+
+export default app;

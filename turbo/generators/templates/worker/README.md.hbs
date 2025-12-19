@@ -1,0 +1,146 @@
+# {{ pascalCase name }}
+
+A Cloudflare Worker generated from the monorepo template.
+
+## Features
+
+- ✅ TypeScript with strict type checking
+{{#if (eq workerType "http")}}
+- ✅ Hono framework for routing
+{{else if (eq workerType "both")}}
+- ✅ Hono framework for routing
+- ✅ Scheduled worker support
+{{else}}
+- ✅ Scheduled worker support
+{{/if}}
+- ✅ Shared types from `@repo/shared-types`
+{{#if includeDatabase}}
+- ✅ Database support with `@repo/db` (Drizzle ORM + D1)
+{{/if}}
+- ✅ ESLint and Prettier pre-configured
+- ✅ Vitest for testing{{#if (eq workerType "http")}} with Miniflare{{else if (eq workerType "both")}} with Miniflare{{/if}}
+- ✅ Hot reload during development
+
+## Development
+
+```bash
+# Start development server
+pnpm dev
+
+# Run tests
+pnpm test
+
+# Type check
+pnpm type-check
+
+# Lint
+pnpm lint
+```
+
+{{#if includeDatabase}}
+## Database Setup
+
+This worker uses Cloudflare D1 for database storage. To set up the database:
+
+```bash
+# Create D1 databases (run from root or this directory)
+npx wrangler d1 create {{ kebabCase name }}-db-dev
+npx wrangler d1 create {{ kebabCase name }}-db-prod
+
+# Update wrangler.toml with the database IDs returned above
+
+# Generate migrations from schema
+pnpm --filter @repo/db db:generate:d1
+
+# Apply migrations to development database
+npx wrangler d1 migrations apply {{ kebabCase name }}-db-dev --local
+
+# Apply migrations to production database (when ready)
+npx wrangler d1 migrations apply {{ kebabCase name }}-db-prod
+```
+
+The database schema is defined in `packages/db/src/schema/sqlite.ts`. After modifying the schema:
+
+1. Generate new migrations: `pnpm --filter @repo/db db:generate:d1`
+2. Apply to local: `npx wrangler d1 migrations apply {{ kebabCase name }}-db-dev --local`
+3. Test your changes
+4. Apply to production: `npx wrangler d1 migrations apply {{ kebabCase name }}-db-prod`
+
+{{/if}}
+{{#if (includes bindings "kv")}}
+## KV Namespace Setup
+
+Create KV namespaces for your worker:
+
+```bash
+# Create development namespace
+npx wrangler kv:namespace create CACHE
+
+# Create production namespace
+npx wrangler kv:namespace create CACHE --env production
+```
+
+Update `wrangler.toml` with the namespace IDs returned.
+
+{{/if}}
+{{#if (includes bindings "r2")}}
+## R2 Bucket Setup
+
+Create R2 buckets for your worker:
+
+```bash
+# Create buckets
+npx wrangler r2 bucket create {{ kebabCase name }}-bucket-dev
+npx wrangler r2 bucket create {{ kebabCase name }}-bucket-prod
+```
+
+The bucket names are already configured in `wrangler.toml`.
+
+{{/if}}
+## Deployment
+
+```bash
+# Deploy to development
+pnpm deploy
+
+# Deploy to production
+pnpm deploy:prod
+```
+
+## Project Structure
+
+```
+src/
+{{#if (eq workerType "http")}}
+├── index.ts        # Main entry point (HTTP handler)
+{{else if (eq workerType "scheduled")}}
+├── scheduled.ts    # Main entry point (Scheduled handler)
+{{else}}
+├── index.ts        # HTTP handler
+├── scheduled.ts    # Scheduled handler
+{{/if}}
+└── types.ts        # Local type definitions
+
+test/
+{{#if (or (eq workerType "http") (eq workerType "both"))}}
+└── index.test.ts   # Integration tests
+{{/if}}
+```
+
+{{#if (or (eq workerType "http") (eq workerType "both"))}}
+## API Endpoints
+
+- `GET /` - Root endpoint
+- `GET /health` - Health check
+{{#if includeDatabase}}
+- `GET /api/users` - List all users (with database integration)
+- `POST /api/users` - Create a new user (requires: `{ email, name }`)
+{{/if}}
+{{/if}}
+
+{{#if (or (eq workerType "scheduled") (eq workerType "both"))}}
+## Scheduled Worker
+
+This worker includes a scheduled handler that runs on a cron schedule. The default schedule is every 6 hours. Update the `[triggers]` section in `wrangler.toml` to change the schedule.
+
+{{/if}}

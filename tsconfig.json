@@ -1,0 +1,13 @@
+{
+  "extends": "./packages/tsconfig/base.json",
+  "compilerOptions": {
+    // Root-level overrides (if needed)
+  },
+  "include": [],
+  "exclude": ["node_modules", "dist", ".turbo", ".wrangler", "coverage"],
+  "references": [
+    { "path": "./packages/shared-types" },
+    { "path": "./packages/db" },
+    { "path": "./apps/example-worker" }
+  ]
+}

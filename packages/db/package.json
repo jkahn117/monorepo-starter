@@ -1,0 +1,40 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared database schemas and clients using Drizzle ORM",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "db:generate:postgres": "drizzle-kit generate --config=drizzle.config.postgres.ts",
+    "db:generate:d1": "drizzle-kit generate --config=drizzle.config.d1.ts",
+    "db:push:postgres": "drizzle-kit push --config=drizzle.config.postgres.ts",
+    "db:push:d1": "drizzle-kit push --config=drizzle.config.d1.ts",
+    "db:studio:postgres": "drizzle-kit studio --config=drizzle.config.postgres.ts",
+    "db:studio:d1": "drizzle-kit studio --config=drizzle.config.d1.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.29.0",
+    "@vercel/postgres": "^0.10.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/prettier-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@types/node": "^20.10.6",
+    "drizzle-kit": "^0.20.9",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0"
+  },
+  "prettier": "@repo/prettier-config"
+}

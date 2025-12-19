@@ -1,0 +1,56 @@
+import type { ApiResponse } from "@repo/shared-types";
+{{#if includeDatabase}}
+import { createD1Client, sqlite } from "@repo/db";
+{{/if}}
+
+interface Env {
+{{#if (includes bindings "d1")}}
+  DB: D1Database;
+{{/if}}
+{{#if (includes bindings "kv")}}
+  CACHE: KVNamespace;
+{{/if}}
+{{#if (includes bindings "r2")}}
+  STORAGE: R2Bucket;
+{{/if}}
+{{#if (includes bindings "do")}}
+  MY_DURABLE_OBJECT: DurableObjectNamespace;
+{{/if}}
+}
+
+export default {
+  async scheduled(
+    event: ScheduledEvent,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
+    console.log(`{{ pascalCase name }} scheduled worker triggered at ${new Date(event.scheduledTime).toISOString()}`);
+
+    try {
+      // Add your scheduled task logic here
+{{#if includeDatabase}}
+      const db = createD1Client(env.DB);
+      
+      // Example: Query database
+      const users = await db.select().from(sqlite.users);
+      console.log(`Found ${users.length} users in database`);
+{{/if}}
+
+      // Example: Store result in KV
+{{#if (includes bindings "kv")}}
+      await env.CACHE.put(
+        "last-scheduled-run",
+        JSON.stringify({
+          timestamp: new Date().toISOString(),
+          cron: event.cron,
+        }),
+      );
+{{/if}}
+
+      console.log("Scheduled task completed successfully");
+    } catch (error) {
+      console.error("Scheduled task failed:", error);
+      throw error;
+    }
+  },
+};

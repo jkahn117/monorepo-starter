@@ -31,7 +31,19 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verify compliance with `.specify/memory/constitution.md`:
+
+- [ ] **Code Quality**: Linting/formatting configuration planned
+- [ ] **Testing Standards**: Test strategy defined (unit, integration, contract)
+- [ ] **Testing Standards**: Test-first workflow acknowledged
+- [ ] **UX Consistency**: User-facing error handling and feedback defined
+- [ ] **Performance**: Response time and resource targets specified
+- [ ] **TypeScript**: Strict TypeScript configuration confirmed
+- [ ] **Simplicity**: Setup time under 15 minutes; dependencies justified
+- [ ] **Architecture**: SOLID principles applied without over-engineering
+- [ ] **Commit Strategy**: Task-based commits planned per template
+
+**Complexity Justification Required?**: [Yes/No - if Yes, complete table in Complexity Tracking section below]
 
 ## Project Structure
 

@@ -1,0 +1,27 @@
+/**
+ * Local type definitions for {{ kebabCase name }}
+ */
+
+export interface WorkerEnv {
+{{#if (includes bindings "d1")}}
+  // D1 Database binding
+  DB: D1Database;
+{{/if}}
+{{#if (includes bindings "kv")}}
+  // KV Namespace binding
+  CACHE: KVNamespace;
+{{/if}}
+{{#if (includes bindings "r2")}}
+  // R2 Bucket binding
+  STORAGE: R2Bucket;
+{{/if}}
+{{#if (includes bindings "do")}}
+  // Durable Objects binding
+  MY_DURABLE_OBJECT: DurableObjectNamespace;
+{{/if}}
+}
+
+export interface RequestContext {
+  env: WorkerEnv;
+  ctx: ExecutionContext;
+}

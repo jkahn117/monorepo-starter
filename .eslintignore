@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+.nuxt/
+.output/
+
+# Cloudflare Workers
+.wrangler/
+.mf/
+
+# Testing
+coverage/
+
+# Generated files
+*.min.js
+
+# Cache
+.turbo/
+.cache/
+
+# Configuration files
+*.config.js
+*.config.mjs

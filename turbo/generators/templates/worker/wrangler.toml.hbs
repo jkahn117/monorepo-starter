@@ -1,0 +1,104 @@
+name = "{{ kebabCase name }}"
+{{#if (eq workerType "http")}}
+main = "src/index.ts"
+{{else if (eq workerType "scheduled")}}
+main = "src/scheduled.ts"
+{{else}}
+main = "src/index.ts"
+{{/if}}
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+{{#if bindings}}
+{{#if (includes bindings "d1")}}
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "{{ kebabCase name }}-db"
+database_id = "{{ kebabCase name }}-db-dev"
+
+{{/if}}
+{{#if (includes bindings "kv")}}
+# KV Namespace binding
+[[kv_namespaces]]
+binding = "CACHE"
+id = "YOUR_KV_NAMESPACE_ID"
+
+{{/if}}
+{{#if (includes bindings "r2")}}
+# R2 Bucket binding
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "{{ kebabCase name }}-bucket"
+
+{{/if}}
+{{#if (includes bindings "do")}}
+# Durable Objects binding
+[[durable_objects.bindings]]
+name = "MY_DURABLE_OBJECT"
+class_name = "MyDurableObject"
+script_name = "{{ kebabCase name }}"
+
+{{/if}}
+{{/if}}
+{{#if (eq workerType "scheduled")}}
+# Scheduled worker configuration
+[triggers]
+crons = ["0 */6 * * *"]  # Run every 6 hours
+
+{{else if (eq workerType "both")}}
+# Scheduled worker configuration
+[triggers]
+crons = ["0 */6 * * *"]  # Run every 6 hours
+
+{{/if}}
+# Development environment
+[env.development]
+name = "{{ kebabCase name }}-dev"
+
+{{#if bindings}}
+{{#if (includes bindings "d1")}}
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "{{ kebabCase name }}-db-dev"
+database_id = "{{ kebabCase name }}-db-dev"
+
+{{/if}}
+{{#if (includes bindings "kv")}}
+[[env.development.kv_namespaces]]
+binding = "CACHE"
+id = "YOUR_KV_NAMESPACE_ID_DEV"
+
+{{/if}}
+{{#if (includes bindings "r2")}}
+[[env.development.r2_buckets]]
+binding = "STORAGE"
+bucket_name = "{{ kebabCase name }}-bucket-dev"
+
+{{/if}}
+{{/if}}
+# Production environment
+[env.production]
+name = "{{ kebabCase name }}-prod"
+
+{{#if bindings}}
+{{#if (includes bindings "d1")}}
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "{{ kebabCase name }}-db-prod"
+database_id = "{{ kebabCase name }}-db-prod"
+
+{{/if}}
+{{#if (includes bindings "kv")}}
+[[env.production.kv_namespaces]]
+binding = "CACHE"
+id = "YOUR_KV_NAMESPACE_ID_PROD"
+
+{{/if}}
+{{#if (includes bindings "r2")}}
+[[env.production.r2_buckets]]
+binding = "STORAGE"
+bucket_name = "{{ kebabCase name }}-bucket-prod"
+
+{{/if}}
+{{/if}}
